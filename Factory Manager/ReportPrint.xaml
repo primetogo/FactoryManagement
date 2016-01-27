@@ -1,0 +1,25 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:Viewer="clr-namespace:SAPBusinessObjects.WPF.Viewer;assembly=SAPBusinessObjects.WPF.Viewer" x:Class="Factory_Manager.ReportPrint"
+        Title="ค้นหาใบคำสั่งที่จะพิมพ์" Height="301" Width="677" Background="#FFE6E6E6" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Icon="image/Fm.png">
+    <Grid>
+        <GroupBox Header="เลือกประเภทใบคำสั่ง" HorizontalAlignment="Left" Margin="465,18,0,0" VerticalAlignment="Top" Height="159" Width="168" FontSize="16"/>
+        <Button x:Name="printBtn" Content="พิมพ์ใบคำสั่ง" HorizontalAlignment="Left" Margin="230,221,0,0" VerticalAlignment="Top" Width="94" FontSize="16" Click="printBtn_Click"/>
+        <Label Content="เลือกประเภทการค้นหาและกรอกคำค้นหา" HorizontalAlignment="Left" Margin="84,10,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <RadioButton x:Name="orderNo" Content="ลำดับสั่ง" HorizontalAlignment="Left" Margin="33,50,0,0" VerticalAlignment="Top" FontSize="16" Width="93" Checked="orderNo_Checked" GroupName="g1"/>
+        <RadioButton x:Name="receiveNo" Content="เลขที่ใบรับสั่ง" HorizontalAlignment="Left" Margin="32,74,0,0" VerticalAlignment="Top" FontSize="16" Width="106" Checked="receiveNo_Checked" GroupName="g1"/>
+        <RadioButton x:Name="recordDate" Content="วันที่บันทึก" HorizontalAlignment="Left" Margin="32,95,0,0" VerticalAlignment="Top" FontSize="16" Width="106" Checked="recordDate_Checked" GroupName="g1"/>
+        <RadioButton x:Name="finishDate" Content="กำหนดส่ง" HorizontalAlignment="Left" Margin="32,120,0,0" VerticalAlignment="Top" FontSize="16" Width="106" Checked="finishDate_Checked" GroupName="g1"/>
+        <Calendar x:Name="dateCalendar" HorizontalAlignment="Left" Margin="144,40,0,0" VerticalAlignment="Top" SelectedDate="{x:Static sys:DateTime.Now}"/>
+        <TextBox x:Name="queryString" HorizontalAlignment="Left" Height="23" Margin="33,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" FontSize="16"/>
+        <Label x:Name="dateCalendarText" Content="กรุณาเลือกวันที่" HorizontalAlignment="Left" Margin="339,104,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <RadioButton x:Name="cut" Content="ใบสั่งตัด" HorizontalAlignment="Left" Margin="477,54,0,0" VerticalAlignment="Top" FontSize="16" Width="93" GroupName="g2"/>
+        <RadioButton x:Name="blow" Content="ใบสั่งเป่า" HorizontalAlignment="Left" Margin="477,78,0,0" VerticalAlignment="Top" FontSize="16" Width="93" GroupName="g2"/>
+        <RadioButton x:Name="print" Content="ใบสั่งพิมพ์" HorizontalAlignment="Left" Margin="477,104,0,0" VerticalAlignment="Top" FontSize="16" Width="93" GroupName="g2"/>
+        <RadioButton x:Name="material" Content="ใบเบิกวัตถุดิบ" HorizontalAlignment="Left" Margin="477,129,0,0" VerticalAlignment="Top" FontSize="16" Width="110" GroupName="g2"/>
+
+
+    </Grid>
+</Window>

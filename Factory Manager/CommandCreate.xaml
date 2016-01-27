@@ -1,0 +1,43 @@
+﻿<Window x:Class="Factory_Manager.CommandCreate"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="เพิ่มข้อมูลใบคำสั่ง" Height="622" Width="1034" ResizeMode="NoResize" Icon="image/Fm.png" WindowStartupLocation="CenterScreen" Background="#FFE6E6E6">
+    <Grid>
+        <GroupBox Header="หมายเหตุ" HorizontalAlignment="Left" Margin="662,13,0,0" VerticalAlignment="Top" FontSize="16" Width="329" Height="463"/>
+
+        <GroupBox Header="รหัสใบคำสั่ง" HorizontalAlignment="Left" Margin="26,7,0,0" VerticalAlignment="Top" FontSize="16" Width="275" Height="162"/>
+
+        <Label Content="ใบคำสั่งพิมพ์" HorizontalAlignment="Left" Margin="33,30,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <TextBox x:Name="printingCode" HorizontalAlignment="Left" Height="23" Margin="135,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+        <Label Content="เลขที่ใบรับสั่ง" HorizontalAlignment="Left" Margin="323,66,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <TextBox x:Name="paperNumber" HorizontalAlignment="Left" Height="23" Margin="428,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+        <Label Content="ปริมาณที่ผลิต" HorizontalAlignment="Left" Margin="323,95,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <TextBox x:Name="paperReqAmount" HorizontalAlignment="Left" Height="23" Margin="440,102,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" FontSize="16"/>
+        <Label Content="ปริมาณที่ต้องการ" HorizontalAlignment="Left" Margin="323,128,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <TextBox x:Name="paperRealAmount" HorizontalAlignment="Left" Height="23" Margin="441,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" FontSize="16"/>
+        <DatePicker x:Name="finishDate" HorizontalAlignment="Left" Margin="391,35,0,0" VerticalAlignment="Top" FontSize="16" Focusable = "False" />
+        <Label Content="วันที่ส่ง" HorizontalAlignment="Left" Margin="320,32,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <Label x:Name="aaa" Content="รหัสลูกค้า" HorizontalAlignment="Left" Margin="31,177,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <ComboBox x:Name="customerList" HorizontalAlignment="Left" Margin="152,181,0,0" VerticalAlignment="Top" Width="190" FontSize="16" SelectionChanged="customerList_SelectionChanged"/>
+        <Label x:Name="aaa_Copy" Content="รหัสผลิตภัณฑ์" HorizontalAlignment="Left" Margin="31,223,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <ComboBox x:Name="productList" HorizontalAlignment="Left" Margin="153,228,0,0" VerticalAlignment="Top" Width="190" FontSize="16" SelectionChanged="productList_SelectionChanged"/>
+        <Label x:Name="aaa_Copy4" Content="ชื่อลูกค้า" HorizontalAlignment="Left" Margin="360,181,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <Label x:Name="aaa_Copy5" Content="ชื่อผลิตภัณฑ์" HorizontalAlignment="Left" Margin="360,227,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <TextBox x:Name="customerName" HorizontalAlignment="Left" Height="23" Margin="428,187,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="214" FontSize="16" IsReadOnly="True"/>
+        <TextBox x:Name="productName" HorizontalAlignment="Left" Height="23" Margin="460,232,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="182" FontSize="16" IsReadOnly="True"/>
+        <Label x:Name="aaa_Copy6" Content="ใบคำสั่งพิมพ์" HorizontalAlignment="Left" Margin="682,37,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <TextBox x:Name="printingPaperDetail" HorizontalAlignment="Left" Height="95" Margin="682,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="294" FontSize="16"/>
+        <Button x:Name="recBtn" Content="บันทึกข้อมูล" HorizontalAlignment="Left" Margin="428,534,0,0" VerticalAlignment="Top" Width="89" FontSize="16" Click="recBtn_Click"/>
+        <Label Content="ใบคำสั่งเป่า" HorizontalAlignment="Left" Margin="35,60,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <TextBox x:Name="blowingCode" HorizontalAlignment="Left" Height="23" Margin="135,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+        <Label Content="ใบคำสั่งตัด" HorizontalAlignment="Left" Margin="35,91,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <TextBox x:Name="cuttingCode" HorizontalAlignment="Left" Height="23" Margin="135,97,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+        <Label Content="ใบคำสั่งเบิกวัตถุดิบ" HorizontalAlignment="Left" Margin="33,124,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <TextBox x:Name="matCode" HorizontalAlignment="Left" Height="23" Margin="166,131,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+        <Label x:Name="aaa_Copy7" Content="ใบคำสั่งเป่า" HorizontalAlignment="Left" Margin="681,318,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <TextBox x:Name="blowingPaperDetail" HorizontalAlignment="Left" Height="95" Margin="681,351,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="288" FontSize="16"/>
+        <Label x:Name="aaa_Copy8" Content="ใบคำสั่งตัด" HorizontalAlignment="Left" Margin="683,170,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
+        <TextBox x:Name="cuttingPaperDetail" HorizontalAlignment="Left" Height="95" Margin="683,203,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="288" FontSize="16"/>
+
+    </Grid>
+</Window>

@@ -1,0 +1,53 @@
+﻿<Window x:Class="Factory_Manager.ProductEdit"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="แก้ไข/ลบผลิตภัณฑ์" Height="545" Width="864.975" ResizeMode="NoResize" Icon="image/Fm.png" Background="#FFE6E6E6" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Label Content="รหัสผลิตภัณฑ์" HorizontalAlignment="Left" Margin="36,22,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="ชื่อผลิตภัณฑ์" HorizontalAlignment="Left" Margin="36,58,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="ประเภทผลิตภัณฑ์" HorizontalAlignment="Left" Margin="36,89,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="หน่วยนับ" HorizontalAlignment="Left" Margin="36,125,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="รหัสสูตรการผลิต" HorizontalAlignment="Left" Margin="36,161,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="น้ำหนัก" HorizontalAlignment="Left" Margin="42,197,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="กิโลกรัม" HorizontalAlignment="Left" Margin="239,198,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="บันทึกสินค้า" HorizontalAlignment="Left" Margin="44,228,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="productName" HorizontalAlignment="Left" Height="23" Margin="171,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="212" FontSize="16"/>
+        <TextBox x:Name="productType" HorizontalAlignment="Left" Height="23" Margin="171,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="212" FontSize="16"/>
+        <TextBox x:Name="productUnit" HorizontalAlignment="Left" Height="23" Margin="122,132,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="112" FontSize="16"/>
+        <ComboBox x:Name="recipeList" HorizontalAlignment="Left" Margin="166,166,0,0" VerticalAlignment="Top" Width="217" FontSize="16"/>
+        <TextBox x:Name="productWeight" HorizontalAlignment="Left" Height="23" Margin="114,203,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="112" FontSize="16"/>
+        <TextBox x:Name="productDetail" HorizontalAlignment="Left" Height="107" Margin="144,234,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="285" FontSize="16"/>
+        <Button x:Name="recBtn" Content="บันทึกข้อมูล" HorizontalAlignment="Left" Margin="96,461,0,0" VerticalAlignment="Top" Width="106" FontSize="16" Click="recBtn_Click"/>
+        <Button x:Name="delBtn" Content="ลบข้อมูล" HorizontalAlignment="Left" Margin="239,461,0,0" VerticalAlignment="Top" Width="106" FontSize="16" Click="delBtn_Click"/>
+        <ComboBox x:Name="prodList" HorizontalAlignment="Left" Margin="152,26,0,0" VerticalAlignment="Top" Width="193" FontSize="16" SelectionChanged="prodList_SelectionChanged"/>
+        <GroupBox Header="รายละเอียดผลิตภัณฑ์" Margin="446,22,21,0" VerticalAlignment="Top" Height="419" FontSize="16" RenderTransformOrigin="0.5,0.5">
+            <GroupBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleX="-0.155"/>
+                    <RotateTransform/>
+                    <TranslateTransform X="-0.497"/>
+                </TransformGroup>
+            </GroupBox.RenderTransform>
+            <TextBox x:Name="cutSize" HorizontalAlignment="Left" Height="94" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="337" AcceptsReturn="True"/>
+        </GroupBox>
+        <Label Content="ขนาดตัด" HorizontalAlignment="Left" Margin="452,37,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="blowSize" HorizontalAlignment="Left" Height="94" Margin="462,198,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="337" AcceptsReturn="True" FontSize="16"/>
+        <Label Content="ขนาดเป่า" HorizontalAlignment="Left" Margin="452,166,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="printSize" HorizontalAlignment="Left" Height="94" Margin="462,331,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="337" AcceptsReturn="True" FontSize="16"/>
+        <Label Content="ขนาดพิมพ์" HorizontalAlignment="Left" Margin="452,297,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <GroupBox Header="รายละเอียดพิมพ์" HorizontalAlignment="Left" Margin="18,355,0,0" VerticalAlignment="Top" FontSize="16" Height="93" Width="411">
+            <Label Content="พิมพ์หน้า สี" HorizontalAlignment="Left" Margin="23,374,0,-282" VerticalAlignment="Top" FontSize="16"/>
+        </GroupBox>
+        <TextBox x:Name="frontColor" HorizontalAlignment="Left" Height="23" Margin="109,380,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="112" FontSize="16"/>
+        <Label Content="พิมพ์หน้า สี" HorizontalAlignment="Left" Margin="23,374,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="พิมพ์หลัง สี" HorizontalAlignment="Left" Margin="23,407,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="backColor" HorizontalAlignment="Left" Height="23" Margin="109,412,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="112" FontSize="16"/>
+        <Label Content="จำนวน" HorizontalAlignment="Left" Margin="221,375,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="frontAmount" HorizontalAlignment="Left" Height="23" Margin="277,380,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" FontSize="16"/>
+        <Label Content="ใบ" HorizontalAlignment="Left" Margin="325,377,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="จำนวน" HorizontalAlignment="Left" Margin="221,408,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="backAmount" HorizontalAlignment="Left" Height="23" Margin="277,413,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" FontSize="16"/>
+        <Label Content="ใบ" HorizontalAlignment="Left" Margin="325,410,0,0" VerticalAlignment="Top" FontSize="16"/>
+    </Grid>
+</Window>

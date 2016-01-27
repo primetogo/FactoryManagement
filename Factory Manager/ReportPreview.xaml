@@ -1,0 +1,11 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Viewer="clr-namespace:SAPBusinessObjects.WPF.Viewer;assembly=SAPBusinessObjects.WPF.Viewer" x:Class="Factory_Manager.ReportPreview"
+        Title="พิมพ์ใบคำสั่ง" Height="687" Width="900" Background="#FFE6E6E6" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Icon="image/Fm.png">
+    <Grid>
+
+        <Viewer:CrystalReportsViewer x:Name="viewer" HorizontalAlignment="Left" Margin="19,19,0,0" VerticalAlignment="Top" Width="850" Height="623" ToggleSidePanel="None" ShowOpenFileButton="False" ShowExportButton="True" ShowNextPageButton="False" ShowRefreshButton="False" ShowPrevPageButton="False" ShowToggleSidePanelButton="False" ShowCopyButton="False" ShowSearchTextButton="False" ShowGoToPageButton="False" ShowLogo="False"/>
+
+    </Grid>
+</Window>

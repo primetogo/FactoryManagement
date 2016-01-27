@@ -1,0 +1,43 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Viewer="clr-namespace:SAPBusinessObjects.WPF.Viewer;assembly=SAPBusinessObjects.WPF.Viewer" x:Class="Factory_Manager.Mainprogram"
+        Title="Factory Management 2015: บริษัท ไทยแสงเจริญ จำกัด" Height="374" Width="904.467" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowState="Maximized" FontSize="16" Closing="Window_Closing" Icon="image/Fm.png">
+    <Grid>
+
+        <Grid.Background>
+            <ImageBrush ImageSource="image/fm pro.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+
+        <DockPanel x:Name="topMenu" Height="27" VerticalAlignment="Top" Grid.ColumnSpan="2">
+            <Menu Height="27" VerticalAlignment="Top" FontSize="16" Cursor="Hand">
+                <MenuItem Header="เพิ่ม/แก้ไขข้อมูลลูกค้า" Click="MenuItem_Click" />
+
+
+                <MenuItem Header="เพิ่ม/แก้ไขข้อมูลวัตถุดิบ" Click="MenuItem_Click_1" />
+                <MenuItem Header="ข้อมูลสูตรการผลิต">
+                    <MenuItem Header="เพื่มข้อมูลสูตร" HorizontalAlignment="Left" Width="247" Click="MenuItem_Click_4"/>
+                    <MenuItem Header="แก้ไขและลบข้อมูลสูตร" HorizontalAlignment="Left" Width="247" Click="MenuItem_Click_5" />
+                </MenuItem>
+                <MenuItem Header="ข้อมูลผลิตภัณฑ์">
+                    <MenuItem Header="เพิ่มข้อมูลผลิตภัณฑ์" HorizontalAlignment="Left" Width="295" Click="MenuItem_Click_6"/>
+                    <MenuItem Header="แก้ไขหรือลบข้อมูลผลิตภัณฑ์" HorizontalAlignment="Left" Width="295" Click="MenuItem_Click_7"/>
+                </MenuItem>
+                <MenuItem Header="ช้อมูลใบคำสั่ง">
+                    <MenuItem Header="เพื่มข้อมูลใบคำสั่ง" HorizontalAlignment="Left" Width="247" Click="MenuItem_Click_8"/>
+                    <MenuItem Header="แก้ไขและลบข้อมูลใบคำสั่ง" HorizontalAlignment="Left" Width="247" Margin="0,0,-47,0" Click="MenuItem_Click_9"/>
+                </MenuItem>
+                <MenuItem Header="พิมพ์ใบคำสั่ง" Click="MenuItem_Click_10"/>
+                <MenuItem Header="รายงานการผลิต" Click="MenuItem_Click_11" />
+                <MenuItem x:Name="system_main" Header="จัดการข้อมูลระบบ">
+                    <MenuItem Header="เพิ่มสมาชิกเข้าระบบ" HorizontalAlignment="Left" Width="295" Click="MenuItem_Click_12"/>
+                    <MenuItem Header="แก้ไขรหัสผ่านสมาชิก" HorizontalAlignment="Left" Width="295" Click="MenuItem_Click_13"/>
+                </MenuItem>
+
+
+            </Menu>
+        </DockPanel>
+        <Image Height="214" Margin="0,42,0,0" VerticalAlignment="Top" Source="image/Fm.png" Stretch="Fill" HorizontalAlignment="Right" Width="233" Grid.Column="1"/>
+
+    </Grid>
+</Window>

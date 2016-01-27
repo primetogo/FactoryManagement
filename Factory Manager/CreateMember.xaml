@@ -1,0 +1,15 @@
+﻿<Window x:Class="Factory_Manager.CreateMember"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="เพิ่มสมาชิก" Height="280.104" Width="492.149" Icon="image/Fm.png" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#FFE6E6E6" FontSize="16">
+    <Grid>
+        <GroupBox Header="ประเภทสมาชิก" HorizontalAlignment="Left" Margin="127,131,0,0" VerticalAlignment="Top" Height="57" Width="212"/>
+        <Label Content="ชื่อผู้ใช้" HorizontalAlignment="Left" Margin="85,42,0,0" VerticalAlignment="Top"/>
+        <Label Content="รหัสผ่าน" HorizontalAlignment="Left" Margin="85,83,0,0" VerticalAlignment="Top"/>
+        <RadioButton x:Name="admin" Content="Admin" HorizontalAlignment="Left" Margin="138,158,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <RadioButton x:Name="user" Content="User" HorizontalAlignment="Left" Margin="255,158,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnrec" Content="บันทึกข้อมูล" HorizontalAlignment="Left" Margin="190,207,0,0" VerticalAlignment="Top" Width="94" Click="btnrec_Click"/>
+        <TextBox x:Name="username" HorizontalAlignment="Left" Height="23" Margin="154,49,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="185"/>
+        <PasswordBox x:Name="password" HorizontalAlignment="Left" Margin="154,91,0,0" VerticalAlignment="Top" Width="185"/>
+    </Grid>
+</Window>
