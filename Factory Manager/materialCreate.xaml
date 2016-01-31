@@ -13,7 +13,7 @@
             <ComboBoxItem Content="ลำดับสั่ง" HorizontalAlignment="Left" Width="169" />
             <ComboBoxItem Content="รหัสวัตถุดิบ" HorizontalAlignment="Left" Width="169" />
             <ComboBoxItem Content="ชนิดวัตถุดิบ" HorizontalAlignment="Left" Width="169" />
-            <ComboBoxItem Content="รหัสเลขที่ใบคำสั่ง" HorizontalAlignment="Left" Width="169" />
+            <ComboBoxItem Content="เลขที่ใบคำสั่ง" HorizontalAlignment="Left" Width="169" />
         </ComboBox>
         <Label Content="ประเภทการค้นหา" HorizontalAlignment="Left" Margin="27,108,0,0" VerticalAlignment="Top" FontSize="16"/>
         <Button x:Name="searchBtn" Content="ค้นหาวัตถุดิบ" HorizontalAlignment="Left" Margin="278,188,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" Click="searchBtn_Click"/>

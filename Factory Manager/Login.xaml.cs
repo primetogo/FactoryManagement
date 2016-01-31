@@ -80,7 +80,7 @@ namespace Factory_Manager
             String connLine = "";
             if (Application.Current.Properties["sqlCon"] == null)
             {
-                Application.Current.Properties["sqlCon"] = "SERVER=localhost; uid=root; pwd='factorymanagement2016'; database=factory management; charset=utf8;";
+                Application.Current.Properties["sqlCon"] = "SERVER=localhost; uid=root; pwd='itkmitl2014'; database=factory management; charset=utf8;";
                 connLine = (String)Application.Current.Properties["sqlCon"];
             }
             else

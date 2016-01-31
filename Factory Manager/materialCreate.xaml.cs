@@ -25,6 +25,7 @@ namespace Factory_Manager
     {
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd;
+        MySqlDataReader reader;
 
         public materialCreate()
         {
@@ -135,7 +136,7 @@ namespace Factory_Manager
                     String getMaterialName = "SELECT materialCode, materialName FROM materiallist WHERE idmaterial = @id";
                     cmd = new MySqlCommand(getMaterialName, conn);
                     cmd.Parameters.AddWithValue("@id", materialCode);
-                    MySqlDataReader reader = cmd.ExecuteReader();
+                    reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
                         materialCodeList.Add(reader.GetString("materialCode"));
@@ -156,6 +157,8 @@ namespace Factory_Manager
 
         private void ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            this.updateBtn.IsEnabled = true;
+            this.recordBtn.IsEnabled = false;
 
         }
 
@@ -182,12 +185,14 @@ namespace Factory_Manager
                     String searchingRecipeId = "SELECT materialCode FROM recipe WHERE recipe_id = @id";
                     cmd = new MySqlCommand(searchingRecipeId, conn);
                     cmd.Parameters.AddWithValue("@id", recipeID);
-                    MySqlDataReader reader = cmd.ExecuteReader();
+                    reader = cmd.ExecuteReader();
                     String materialDetail = "";
                     List<String> materialCodeList = new List<String>(), materialNameList = new List<String>();
                     List<List<String>> materialData = new List<List<String>>();
                     if (reader.HasRows == false)
                     {
+                        this.materialResult.Items.Clear();
+                        this.materialResult.IsEnabled = false;
                         reader.Close();
                         MessageBox.Show("ไม่พบสูตรที่ค้นหา", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
@@ -216,12 +221,14 @@ namespace Factory_Manager
                     String searchByRecipeName = "SELECT materialCode FROM recipe WHERE recipe_name = @name";
                     cmd = new MySqlCommand(searchByRecipeName, conn);
                     cmd.Parameters.AddWithValue("@name", recipeName);
-                    MySqlDataReader reader = cmd.ExecuteReader();
+                    reader = cmd.ExecuteReader();
                     String materialDetail = "";
                     List<String> materialCodeList = new List<String>(), materialNameList = new List<String>();
                     List<List<String>> materialData = new List<List<String>>();
                     if (reader.HasRows == false)
                     {
+                        this.materialResult.Items.Clear();
+                        this.materialResult.IsEnabled = false;
                         reader.Close();
                         MessageBox.Show("ไม่พบสูตรที่ค้นหา", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
@@ -244,8 +251,132 @@ namespace Factory_Manager
                                 materialN = materialNameList[i]
                             });
                         }
-                    }               
+                    }
+
+                }
+                else if (inputFlag == true && selectedSearchType == 2)
+                {
+                    this.materialResult.Items.Clear();
+                    if(this.searchQuery.Text.Contains('-')){
+                        String yearCode = this.searchQuery.Text.Split('-')[0];
+                        String rowId = this.searchQuery.Text.Split('-')[1];
+                        CheckStateDB();
+                        String sqlGetproduct = "SELECT productId FROM command_card WHERE year=@year AND rowid=@row";
+                        String productId = "", recipeId = "", materialCode = "";
+                        cmd = new MySqlCommand(sqlGetproduct, conn);
+                        cmd.Parameters.AddWithValue("@year", yearCode);
+                        cmd.Parameters.AddWithValue("@row", int.Parse(rowId.TrimStart('0')));
+                        reader = cmd.ExecuteReader();
+                        if (reader.HasRows == true)
+                        {
+                            while(reader.Read()){
+                                productId = reader.GetString("productId");
+                            }
+                            reader.Close();
+                            CheckStateDB();
+                            String sqlGetRecipe = "SELECT recipe_id FROM product WHERE product_id = @id";
+                            cmd = new MySqlCommand(sqlGetRecipe, conn);
+                            cmd.Parameters.AddWithValue("@id", productId);
+                            reader = cmd.ExecuteReader();
+                            while(reader.Read()){
+                                recipeId = reader.GetString("recipe_id");
+                            }
+                            reader.Close();
+                            CheckStateDB();
+                            String sqlGetMaterial = "SELECT materialCode FROM recipe WHERE recipe_id = @id";
+                            cmd = new MySqlCommand(sqlGetMaterial, conn);
+                            cmd.Parameters.AddWithValue("@id", recipeId);
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                materialCode = reader.GetString("materialCode");
+                            }
+                            reader.Close();
+                            List<List<String>> materialData = ResolveMaterialName(materialCode);
+                            List<String> materialCoder = materialData[0];
+                            List<String> materialName = materialData[1];
+                         
+                           for (int k = 0; k < materialCoder.Count(); k++)
+                            {
+                                materialResult.Items.Add(new
+                                {
+                                    materialC = materialCoder[k],
+                                    materialN = materialName[k]
+                                });
+                            }
+                            this.materialResult.IsEnabled = true;
+                            
+                        }
+                        else
+                        {
+                            this.materialResult.Items.Clear();
+                            this.materialResult.IsEnabled = false;
+                            reader.Close();
+                            MessageBox.Show("ไม่พบลำดับสั่งที่ค้นหา", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        
+                    }
+                    else
+                    {
+                        MessageBox.Show("กรุณาใส่ลำดับสั่งให้ถูกต้อง", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }else if(inputFlag == true && selectedSearchType == 3){
+                    String materialCode = this.searchQuery.Text;
+                    CheckStateDB();
+                    String sqlGetMaterialName = "SELECT materialcode, materialname FROM materiallist WHERE materialcode REGEXP @code";
+                    cmd = new MySqlCommand(sqlGetMaterialName, conn);
+                    cmd.Parameters.AddWithValue("@code", materialCode);
+                    reader = cmd.ExecuteReader();
+                    if (reader.HasRows == true)
+                    {
+                        this.materialResult.Items.Clear();
+                        this.materialResult.IsEnabled = true;
+                        while (reader.Read())
+                        {
+                            materialResult.Items.Add(new
+                            {
+                                materialC = reader.GetString("materialcode"),
+                                materialN = reader.GetString("materialname")
+                            });
+                        }
+                        reader.Close();
+                    }
+                    else
+                    {
+                        this.materialResult.Items.Clear();
+                        this.materialResult.IsEnabled = false;
+                        reader.Close();
+                        MessageBox.Show("ไม่พบรหัสที่ค้นหา", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                     
+                }else if(inputFlag == true && selectedSearchType == 4){
+                    String materialCode = this.searchQuery.Text;
+                    CheckStateDB();
+                    String sqlGetMaterialName = "SELECT materialcode, materialname FROM materiallist WHERE materialname REGEXP @code";
+                    cmd = new MySqlCommand(sqlGetMaterialName, conn);
+                    cmd.Parameters.AddWithValue("@code", materialCode);
+                    reader = cmd.ExecuteReader();
+                    if (reader.HasRows == true)
+                    {
+                        this.materialResult.Items.Clear();
+                        this.materialResult.IsEnabled = true;
+                        while (reader.Read())
+                        {
+                            materialResult.Items.Add(new
+                            {
+                                materialC = reader.GetString("materialcode"),
+                                materialN = reader.GetString("materialname")
+                            });
+                        }
+                        reader.Close();
+                    }
+                    else
+                    {
+                        this.materialResult.Items.Clear();
+                        this.materialResult.IsEnabled = false;
+                        reader.Close();
+                        MessageBox.Show("ไม่พบชนิดที่ค้นหา", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
                 SucceedLogCreate("Retreiving material list:materialCreate");
                 
