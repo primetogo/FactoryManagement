@@ -6,7 +6,7 @@
         <TextBox x:Name="materialCode" HorizontalAlignment="Left" Height="23" Margin="131,27,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" FontSize="16" MaxLength="15"/>
         <Label Content="ชนิดวัตถุดิบ" HorizontalAlignment="Left" Margin="27,58,0,0" VerticalAlignment="Top" FontSize="16"/>
         <TextBox x:Name="materialType" HorizontalAlignment="Left" Height="23" Margin="132,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" FontSize="16"/>
-        <Button x:Name="recordBtn" Content="บันทึกข้อมูล" HorizontalAlignment="Left" Margin="47,188,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" Click="recordBtn_Click" />
+        <Button x:Name="recordBtn" Content="บันทึกข้อมูล" HorizontalAlignment="Left" Margin="27,188,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" Click="recordBtn_Click" />
         <ComboBox x:Name="typeSearch" HorizontalAlignment="Left" Margin="155,113,0,0" VerticalAlignment="Top" Width="171" FontSize="14" SelectionChanged="typeSearch_SelectionChanged">
             <ComboBoxItem Content="รหัสสูตร" HorizontalAlignment="Left" Width="169" />
             <ComboBoxItem Content="ชื่อสูตร" HorizontalAlignment="Left" Width="169" />
@@ -16,10 +16,10 @@
             <ComboBoxItem Content="เลขที่ใบคำสั่ง" HorizontalAlignment="Left" Width="169" />
         </ComboBox>
         <Label Content="ประเภทการค้นหา" HorizontalAlignment="Left" Margin="27,108,0,0" VerticalAlignment="Top" FontSize="16"/>
-        <Button x:Name="searchBtn" Content="ค้นหาวัตถุดิบ" HorizontalAlignment="Left" Margin="278,188,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" Click="searchBtn_Click"/>
-        <Button x:Name="updateBtn" Content="แก้ไขข้อมูล" HorizontalAlignment="Left" Margin="167,188,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" Click="updateBtn_Click" IsEnabled="False" RenderTransformOrigin="0.323,0.6"/>
+        <Button x:Name="searchBtn" Content="ค้นหาวัตถุดิบ" HorizontalAlignment="Left" Margin="237,190,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" Click="searchBtn_Click"/>
+        <Button x:Name="updateBtn" Content="แก้ไขข้อมูล" HorizontalAlignment="Left" Margin="132,189,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" Click="updateBtn_Click" IsEnabled="False" RenderTransformOrigin="0.323,0.6"/>
       
-        <ListView x:Name="materialResult" HorizontalAlignment="Left" Height="170" VerticalAlignment="Top" Width="479" Margin="418,46,0,0" FontSize="16" IsEnabled="False">
+        <ListView x:Name="materialResult" HorizontalAlignment="Left" Height="170" VerticalAlignment="Top" Width="431" Margin="470,58,0,0" FontSize="16" IsEnabled="False">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="รหัสวัตถุดิบ" Width="95" DisplayMemberBinding="{Binding materialC}"/>
@@ -32,9 +32,10 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <Label Content="ผลการค้นหาวัตถุดิบ" HorizontalAlignment="Left" Margin="591,10,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="ผลการค้นหาวัตถุดิบ" HorizontalAlignment="Left" Margin="614,10,0,0" VerticalAlignment="Top" FontSize="16"/>
         <Label x:Name="searchQueryLabel" Content="กรอกคำค้นหา" HorizontalAlignment="Left" Margin="44,145,0,0" VerticalAlignment="Top" FontSize="16" Visibility="Hidden"/>
         <TextBox x:Name="searchQuery" HorizontalAlignment="Left" Height="23" Margin="155,153,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" FontSize="16" Visibility="Hidden"
                  />
+        <Button x:Name="deleteBtn" Content="ลบวัตถุดิบ" HorizontalAlignment="Left" Margin="352,190,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" IsEnabled="False" Click="deleteBtn_Click"/>
     </Grid>
 </Window>

@@ -166,7 +166,7 @@ namespace Factory_Manager
             this.searchQuery.Visibility = Visibility.Hidden;
             this.typeSearch.SelectedIndex = -1;
             this.searchQueryLabel.Visibility = Visibility.Hidden;
-
+            this.deleteBtn.IsEnabled = true;
             var item = sender as ListViewItem;
             if (item != null && item.IsSelected)
             {
@@ -180,7 +180,48 @@ namespace Factory_Manager
 
         private void recordBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(this.materialCode.Text) || string.IsNullOrWhiteSpace(this.materialCode.Text) ||
+                string.IsNullOrWhiteSpace(this.materialType.Text) || string.IsNullOrEmpty(this.materialType.Text) == false)
+            {
+                CheckStateDB();
+                String sqlCheckExists = "SELECT materialcode FROM materiallist WHERE materialcode = @cod AND materialname = @nam";
+                cmd = new MySqlCommand(sqlCheckExists, conn);
+                cmd.Parameters.AddWithValue("@cod", this.materialCode.Text);
+                cmd.Parameters.AddWithValue("@nam", this.materialType.Text);
+                reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    if (MessageBox.Show("มีวัตถุดิบนี้บันทึกอยู่แล้วจะบันทึกเพิ่มหรือไม่?", "คำเตือน", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    {
+                        String sqlInsertMaterial = "INSERT INTO materiallist (materialcode, materialname) VALUES(@code, @name)";
+                        cmd = new MySqlCommand(sqlInsertMaterial, conn);
+                        cmd.Parameters.AddWithValue("@code", this.materialCode.Text);
+                        cmd.Parameters.AddWithValue("@name", this.materialType.Text);
+                        cmd.ExecuteNonQuery();
 
+                        MessageBox.Show("บันทึกข้อมูลวัตถุดิบสำเร็จแล้ว"
+                   , "สถานะการบันทึก", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    this.materialCode.Clear();
+                    this.materialType.Clear();
+                    reader.Close();
+                }
+                else
+                {
+                    String sqlInsertMaterial = "INSERT INTO materiallist (materialcode, materialname) VALUES(@code, @name)";
+                    cmd = new MySqlCommand(sqlInsertMaterial, conn);
+                    cmd.Parameters.AddWithValue("@code", this.materialCode.Text);
+                    cmd.Parameters.AddWithValue("@name", this.materialType.Text);
+                    cmd.ExecuteNonQuery();
+                    this.materialCode.Clear();
+                    this.materialType.Clear();
+                }
+            }
+            else
+            {
+                MessageBox.Show("กรุณาใส่ข้อมูลให้ครบ"
+                                , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void updateBtn_Click(object sender, RoutedEventArgs e)
@@ -205,8 +246,15 @@ namespace Factory_Manager
                     this.updateBtn.IsEnabled = false;
                     this.materialCode.Clear();
                     this.materialType.Clear();
+                    selectedMaterialCoder = "";
+                    selectedMaterialName = "";
                     MessageBox.Show("บันทึกข้อมูลวัตถุดิบสำเร็จแล้ว"
                    , "สถานะการบันทึก", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("กรุณาใส่ข้อมูลให้ครบ"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             catch (Exception ex)
@@ -493,9 +541,6 @@ namespace Factory_Manager
                         reader.Close();
                         MessageBox.Show("ไม่พบเลขที่ที่ค้นหา", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
-
-
-
                 }
                 SucceedLogCreate("Retreiving material list:materialCreate");
 
@@ -529,6 +574,11 @@ namespace Factory_Manager
             {
                 ShowSearchQueryBox();
             }
+        }
+
+        private void deleteBtn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
 
