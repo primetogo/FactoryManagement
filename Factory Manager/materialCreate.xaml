@@ -18,14 +18,7 @@
         <Label Content="ประเภทการค้นหา" HorizontalAlignment="Left" Margin="27,108,0,0" VerticalAlignment="Top" FontSize="16"/>
         <Button x:Name="searchBtn" Content="ค้นหาวัตถุดิบ" HorizontalAlignment="Left" Margin="278,188,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" Click="searchBtn_Click"/>
         <Button x:Name="updateBtn" Content="แก้ไขข้อมูล" HorizontalAlignment="Left" Margin="167,188,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" Click="updateBtn_Click" IsEnabled="False" RenderTransformOrigin="0.323,0.6"/>
-        <TextBox x:Name="searchQueryNo1" Visibility="Hidden" HorizontalAlignment="Left" Height="23" Margin="444,237,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="45" FontSize="16" MaxLength="4" CharacterCasing="Upper"/>
-        <Label x:Name="searchQueryNoLabel" Visibility="Hidden" Content="เลขที่ใบคำสั่ง" HorizontalAlignment="Left" Margin="344,232,0,0" VerticalAlignment="Top" FontSize="16" />
-        <Label x:Name="searchQueryOrderLabel" Content="ลำดับสั่ง" HorizontalAlignment="Left" Margin="344,232,0,0" VerticalAlignment="Top" FontSize="16" Visibility="Hidden"/>
-        <TextBox x:Name="searchQueryOrder1" HorizontalAlignment="Left" Height="23" Margin="444,237,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="31" FontSize="16" MaxLength="2" Visibility="Hidden"/>
-        <TextBox x:Name="searchQueryOrder2" HorizontalAlignment="Left" Height="23" Margin="509,237,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="53" FontSize="16" MaxLength="5" Visibility="Hidden"/>
-        <Label x:Name="searchQueryOrderDat" Content="-" HorizontalAlignment="Left" Margin="489,233,0,0" VerticalAlignment="Top" FontSize="16" Visibility="Hidden"/>
-        <TextBox x:Name="searchQueryNo2" Visibility="Hidden" HorizontalAlignment="Left" Height="23" Margin="509,237,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="53" FontSize="16" MaxLength="5" CharacterCasing="Upper"/>
-        <Label x:Name="searchQueryNoDat" Visibility="Hidden" Content="-" HorizontalAlignment="Left" Margin="489,233,0,0" VerticalAlignment="Top" FontSize="16" />
+      
         <ListView x:Name="materialResult" HorizontalAlignment="Left" Height="170" VerticalAlignment="Top" Width="479" Margin="418,46,0,0" FontSize="16" IsEnabled="False">
             <ListView.View>
                 <GridView>
