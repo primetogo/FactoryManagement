@@ -578,14 +578,32 @@ namespace Factory_Manager
 
         private void deleteBtn_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                CheckStateDB();
+                String sqlDeleteMaterial = "DELETE FROM materiallist WHERE materialcode = @code AND materialname = @name";
+                cmd = new MySqlCommand(sqlDeleteMaterial, conn);
+                cmd.Parameters.AddWithValue("@code", selectedMaterialCoder);
+                cmd.Parameters.AddWithValue("@name", selectedMaterialName);
+                cmd.ExecuteNonQuery();
+                this.materialCode.Clear();
+                this.materialType.Clear();
+                this.materialResult.Items.Clear();
+                this.updateBtn.IsEnabled = false;
+                this.deleteBtn.IsEnabled = false;
+                SucceedLogCreate("Delete material:materialCreate");
+                MessageBox.Show("ลบข้อมูลวัตถุดิบสำเร็จแล้ว"
+                   , "สถานะการบันทึก", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogCreate(ex);
+                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
+                , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            
 
         }
-
-
-
-
-
-
 
     }
 }
