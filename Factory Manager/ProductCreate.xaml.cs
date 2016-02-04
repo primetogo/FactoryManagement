@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -24,10 +25,20 @@ namespace Factory_Manager
     {
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd;
+        MySqlDataReader reader;
         public ProductCreate()
         {
             InitializeComponent();
             RetreiveRecipe();
+        }
+
+        private void CheckStateDB()
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
+                conn.Open();
+            }
         }
 
         private void RetreiveRecipe()
@@ -35,11 +46,10 @@ namespace Factory_Manager
             ///Retreive recipe list from database
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlGetRecipe = "SELECT recipe_id FROM recipe";
                 cmd = new MySqlCommand(sqlGetRecipe, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 if (reader.HasRows == false)
                 {
                     throw new Exception("No row were found!");
@@ -59,11 +69,10 @@ namespace Factory_Manager
                 {
                     this.recipeList.Items.Add(reader.GetString("recipe_id"));
                 }
-                conn.Close();
+                reader.Close();
             }
             catch (Exception e)
             {
-                conn.Close();
                 ErrorLogCreate(e);
                 this.recipeList.Items.Clear();
                 this.productCode.IsEnabled = false;
@@ -155,8 +164,7 @@ namespace Factory_Manager
             backAmountValue = ValidateInput(backAmountValue);
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sql_insert = "INSERT INTO product (product_id, product_type, product_name, unit, product_weight," +
                                     "recipe_id, productRecord, cutSize, printSize, blowSize, printFrontColor, "+
                                     "printBackColor, printFrontAmount, printBackAmount) VALUES(@product_id, @product_type, @product_name, @unit," +
@@ -178,12 +186,12 @@ namespace Factory_Manager
                 cmd.Parameters.AddWithValue("@printfrontamount", EncoderUTF(frontAmountValue));
                 cmd.Parameters.AddWithValue("@printbackamount", EncoderUTF(backAmountValue));
                 cmd.ExecuteNonQuery();
-                conn.Close();
+                
                 MessageBox.Show("ทำการบันทึกข้อมูลผลิตภัณฑ์เรียบร้อยแล้ว", "สถานะการบันทึก");
             }
             catch (Exception tron)
             {
-                conn.Close();
+                
                 ErrorLogCreate(tron);
                 MessageBox.Show("กรอกข้อมูลที่จำเป็นไม่ครบหรือมีรหัสผลิตภัณฑ์นี้แล้ว", "สถานะการบันทึก");
                 

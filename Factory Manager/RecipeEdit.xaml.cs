@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -23,7 +24,8 @@ namespace Factory_Manager
     public partial class RecipeEdit : Window
     {
         MySqlConnection conn = new MySqlConnection();
-        MySqlCommand cmd, count;
+        MySqlCommand cmd;
+        MySqlDataReader reader;
         int matCount = 0, recipeCount = 0, review = 0, add = 0, del = 0;
         public RecipeEdit()
         {
@@ -33,27 +35,36 @@ namespace Factory_Manager
             CheckMaterialPerm();
         }
 
+        private void CheckStateDB()
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
+                conn.Open();
+            }
+        }
+
         private void RetreiveRecipeList()
         {
             ///Get recipe list from database
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sql_get = "SELECT recipe_id FROM recipe";
                 String sql_count = "SELECT COUNT(*) FROM recipe";
-                count = new MySqlCommand(sql_count, conn);
-                MySqlDataReader red = count.ExecuteReader();
-                red.Read();
-                recipeCount = (int)red.GetInt64(0);
-                red.Close();
+                cmd = new MySqlCommand(sql_count, conn);
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                recipeCount = (int)reader.GetInt64(0);
+                reader.Close();
                 cmd = new MySqlCommand(sql_get, conn);
-                MySqlDataReader cake = cmd.ExecuteReader();
-                while (cake.Read())
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    this.recipeList.Items.Add(cake.GetString("recipe_id"));
+                    this.recipeList.Items.Add(reader.GetString("recipe_id"));
                 }
-                conn.Close();
+                reader.Close();
+                
             }
             catch (Exception e)
             {
@@ -89,19 +100,19 @@ namespace Factory_Manager
             ///Get recipe data from database by recipe id
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sql_get = "SELECT recipe_name, detail, materialCode FROM recipe WHERE recipe_id = @recipe_id";
                 cmd = new MySqlCommand(sql_get, conn);
                 cmd.Parameters.AddWithValue("@recipe_id", recId);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     this.recipeName.Text = reader.GetString("recipe_name");
                     this.recipeDetail.Text = reader.GetString("detail");
                     this.recipeMaterial.Text = reader.GetString("materialCode");
                 }
-                conn.Close();
+                reader.Close();
+               
             }
             catch (Exception e)
             {
@@ -152,18 +163,17 @@ namespace Factory_Manager
             ///Retreive material data and insert output in name box and material box
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sql_get_data = "SELECT materialcode, materialname FROM materiallist WHERE idmaterial = @idmaterial";
                 cmd = new MySqlCommand(sql_get_data, conn);
                 cmd.Parameters.AddWithValue("@idmaterial", matId);
-                MySqlDataReader read = cmd.ExecuteReader();
-                while (read.Read())
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    this.materialName.Text = read.GetString("materialcode") + "   " + read.GetString("materialname");
+                    this.materialName.Text = reader.GetString("materialcode") + "   " + reader.GetString("materialname");
                 }
                 add = 1;
-                conn.Close();
+                reader.Close();
             }
             catch (Exception e)
             {
@@ -179,21 +189,16 @@ namespace Factory_Manager
             ///Get material list from database and add to combobox
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sql_get_mat = "SELECT idmaterial FROM materiallist";
                 String sql_count = "SELECT COUNT(*) FROM materiallist";
                 cmd = new MySqlCommand(sql_get_mat, conn);
-                count = new MySqlCommand(sql_count, conn);
-                MySqlDataReader cat = count.ExecuteReader();
-                cat.Read();
-                matCount = (int)cat.GetInt64(0);
-                cat.Close();
-                MySqlDataReader read = cmd.ExecuteReader();
-                while (read.Read())
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    this.materialList.Items.Add(read.GetString("idmaterial"));
+                    this.materialList.Items.Add(reader.GetString("idmaterial"));
                 }
+                reader.Close();
                 if (matCount == 0)
                 {
                     this.materialList.IsEnabled = false;
@@ -202,7 +207,14 @@ namespace Factory_Manager
                 {
                     this.materialList.IsEnabled = true;
                 }
-                conn.Close();
+                
+
+                cmd = new MySqlCommand(sql_count, conn);
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                matCount = (int)reader.GetInt64(0);
+                reader.Close();
+
             }
             catch (Exception e)
             {
@@ -320,8 +332,7 @@ namespace Factory_Manager
                 }
 
 
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sql_insert = "UPDATE recipe SET recipe_name = @recipe_name, detail = @detail, materialCode = @materialCode WHERE recipe_id=@recipe_id";
                 cmd = new MySqlCommand(sql_insert, conn);
                 cmd.Parameters.AddWithValue("@recipe_id", id);
@@ -333,8 +344,9 @@ namespace Factory_Manager
                 this.recipeMaterial.Clear();
                 this.recipeName.Clear();
                 review = 1;
-                this.recipeList.SelectedIndex = -1;
                 MessageBox.Show("ทำการบันทึกข้อมูลสูตรเรียบร้อยแล้ว", "สถานะการบันทึก");
+                this.recipeList.SelectedIndex = -1;
+                
             }
             catch (Exception x)
             {
@@ -342,7 +354,7 @@ namespace Factory_Manager
                 MessageBox.Show("กรอกข้อมูลที่จำเป็นไม่ครบ", "สถานะการบันทึก");
 
             }
-            conn.Close();
+         
 
         }
 
@@ -352,14 +364,13 @@ namespace Factory_Manager
             {
                 if (!(string.IsNullOrWhiteSpace(this.recipeList.SelectedValue.ToString())))
                 {
-                    conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                    conn.Open();
+                    CheckStateDB();
                     String sql_del = "DELETE FROM recipe WHERE recipe_id = @recipe_id";
                     cmd = new MySqlCommand(sql_del, conn);
                     cmd.Parameters.AddWithValue("@recipe_id", this.recipeList.SelectedValue.ToString());
                     cmd.ExecuteNonQuery();
-                    conn.Close();
                     del = 1;
+                    MessageBox.Show("ลบข้อมูลสูตรแล้ว", "สถานะการบันทึก");
                     RetreiveRecipeList();
                     CheckMaterialPerm();
 
@@ -381,7 +392,7 @@ namespace Factory_Manager
 
         private void recipeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if ((review == 0 || recipeCount != 0) && del == 0)
+            if ((review == 0 && recipeCount != 0) && del == 0)
             {
                 ReviewRecipeData(this.recipeList.SelectedValue.ToString());
             }

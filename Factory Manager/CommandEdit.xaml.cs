@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -24,7 +25,8 @@ namespace Factory_Manager
     {
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd;
-        Boolean recPass1 = false, recPass2 = false, recPass3 = false, recPass4 = false, recPass5 = false;
+        MySqlDataReader reader;
+        Boolean recPass1 = false, recPass2 = false/*, recPass3 = false*/, recPass4 = false, recPass5 = false;
         String[] currentNumber = new String[4];
         public CommandEdit()
         {
@@ -35,16 +37,24 @@ namespace Factory_Manager
             RetreiveProduct();
         }
 
+        private void CheckStateDB()
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
+                conn.Open();
+            }
+        }
+
         private void RetreiveCommandList()
         {
             ///Get command all list
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String getList = "SELECT rowid, year FROM command_card";
                 cmd = new MySqlCommand(getList, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 if (reader.HasRows == true)
                 {
                     while (reader.Read())
@@ -52,19 +62,17 @@ namespace Factory_Manager
                         String comd = reader.GetString("year") + "-" + reader.GetString("rowid").PadLeft(4, '0');
                         this.commandList.Items.Add(comd);
                     }
-                    conn.Close();
                 }
                 else
-                {
-                    conn.Close();
+                { 
                     LockScreen("lock");
                 }
+                reader.Close();
                 SucceedLogCreate("retreive command card list");
 
             }
             catch (Exception e)
             {
-                conn.Close();
                 ErrorLogCreate(e);
             }
 
@@ -75,29 +83,26 @@ namespace Factory_Manager
             ///Retrieve customer data from database to add in combobox
             try
             {
-                String connecter = (String)Application.Current.Properties["sqlCon"];
-                conn.ConnectionString = connecter;
+                CheckStateDB();
                 String sql_get = "SELECT customer_id FROM customer";
                 cmd = new MySqlCommand(sql_get, conn);
-                conn.Open();
-                MySqlDataReader road = cmd.ExecuteReader();
-                if (road.HasRows == true)
+                reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
                 {
-                    while (road.Read())
+                    while (reader.Read())
                     {
-                        this.customerList.Items.Add(road.GetString("customer_id"));
+                        this.customerList.Items.Add(reader.GetString("customer_id"));
                     }
-                    conn.Close();
                     SucceedLogCreate("retreive customer data");
                 }
                 else
                 {
                     throw new Exception("No row were found!");
                 }
+                reader.Close();
             }
             catch (Exception e)
             {
-                conn.Close();
                 ErrorLogCreate(e);
                 LockScreen("lock");
             }
@@ -150,9 +155,7 @@ namespace Factory_Manager
             try
             {
                 ///use this to delete card
-                String connecter = (String)Application.Current.Properties["sqlCon"];
-                conn.ConnectionString = connecter;
-                conn.Open();
+                CheckStateDB();
                 String delete = "DELETE FROM command_card WHERE year=@year AND rowid=@id";
                 String[] cardCode = this.commandList.SelectedValue.ToString().Split('-');
                 cmd = new MySqlCommand(delete, conn);
@@ -161,10 +164,9 @@ namespace Factory_Manager
                 cmd.ExecuteNonQuery();
                 recPass1 = true;
                 recPass2 = true;
-                recPass3 = true;
+                //recPass3 = true;
                 recPass4 = true;
                 recPass5 = true;
-                conn.Close();
 
                 LockScreen("clear");
                 RetreiveCommandList();
@@ -176,7 +178,6 @@ namespace Factory_Manager
             }
             catch (Exception e)
             {
-                conn.Close();
                 ErrorLogCreate(e);
                 MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
                     , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -188,11 +189,10 @@ namespace Factory_Manager
             ///Get product list from database
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlGet = "SELECT product_id FROM product";
                 cmd = new MySqlCommand(sqlGet, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 if (reader.HasRows == true)
                 {
                     while (reader.Read())
@@ -205,13 +205,11 @@ namespace Factory_Manager
                 else
                 {
                     throw new Exception("No row were found!");
-
                 }
-
+                reader.Close();
             }
             catch (Exception ex)
             {
-                conn.Close();
                 ErrorLogCreate(ex);
                 LockScreen("lock");
             }
@@ -222,17 +220,16 @@ namespace Factory_Manager
             ///get customername from custoermer id
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlGet = "SELECT customer_name FROM customer WHERE customer_id = @customerId";
                 cmd = new MySqlCommand(sqlGet, conn);
                 cmd.Parameters.AddWithValue("@customerId", id);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     this.customerName.Text = reader.GetString("customer_name");
                 }
-                conn.Close();
+                reader.Close();
             }
             catch (Exception e)
             {
@@ -247,17 +244,16 @@ namespace Factory_Manager
             ///get product name from id
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlGet = "SELECT product_name FROM product WHERE product_id = @cusid";
                 cmd = new MySqlCommand(sqlGet, conn);
                 cmd.Parameters.AddWithValue("@cusid", id);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     this.productName.Text = reader.GetString("product_name");
                 }
-                conn.Close();
+                reader.Close();
             }
             catch (Exception e)
             {
@@ -275,8 +271,7 @@ namespace Factory_Manager
             try
             {
                 String[] codeIn = id.Split('-');
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String cusId = "";
                 String prodId = "";
                 String getData = "SELECT customerId, productId, receiveNumber, finishDate, produceAmount, cardCode, " +
@@ -284,10 +279,10 @@ namespace Factory_Manager
                 cmd = new MySqlCommand(getData, conn);
                 cmd.Parameters.AddWithValue("@year", codeIn[0]);
                 cmd.Parameters.AddWithValue("@rowid", codeIn[1].TrimStart('0'));
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 recPass1 = true;
                 recPass2 = true;
-                recPass3 = true;
+                //recPass3 = true;
                 recPass4 = true;
                 while (reader.Read())
                 {
@@ -309,7 +304,7 @@ namespace Factory_Manager
                     this.blowingPaperDetail.Text = detail[1];
                     this.cuttingPaperDetail.Text = detail[2];
                 }
-                conn.Close();
+                reader.Close();
                 GetCustomerName(cusId);
                 GetProductName(prodId);
             }
@@ -347,22 +342,21 @@ namespace Factory_Manager
             String[] code = new String[4];
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 int number;
                 String[] prefix = { "PR", "BL", "CU", "RW" };
                 CultureInfo ci = new CultureInfo("en-US");
                 String currentYear = DateTime.Now.ToString("yy", ci);
                 String getNum = "SELECT COUNT(*) FROM command_card";
                 cmd = new MySqlCommand(getNum, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 reader.Read();
                 number = reader.GetInt32(0);
                 for (int i = 0; i < 4; i++)
                 {
                     code[i] = prefix[i] + currentYear + "-" + (number + 1).ToString().PadLeft(4, '0');
                 }
-                conn.Close();
+                reader.Close();
             }
             catch (Exception e)
             {
@@ -381,14 +375,13 @@ namespace Factory_Manager
             String rowCount = "";
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sql_count = "SELECT COUNT(*) FROM command_card";
                 cmd = new MySqlCommand(sql_count, conn);
                 MySqlDataReader reader = cmd.ExecuteReader();
                 reader.Read();
                 rowCount = reader.GetInt64(0).ToString();
-                conn.Close();
+                reader.Close();
             }
             catch (Exception e)
             {
@@ -427,8 +420,7 @@ namespace Factory_Manager
                     if (create == false)
                     {
                         ///Update all command data
-                        conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                        conn.Open();
+                        CheckStateDB();
                         String getData = "UPDATE command_card SET customerId=@customerId, productId=@productId, receiveNumber=@receiveNumber," +
                                          "finishDate=@finishDate, produceAmount=@produceAmount, requiredAmount=@requiredAmount, cardDetail=@cardDetail " +
                                          "WHERE year=@year AND rowid=@rowid";
@@ -438,14 +430,14 @@ namespace Factory_Manager
                         cmd.Parameters.AddWithValue("@productId", EncoderUTF(productCode));
                         cmd.Parameters.AddWithValue("@receiveNumber", EncoderUTF(receiveCode));
                         cmd.Parameters.AddWithValue("@finishDate", EncoderUTF(finishDate));
-                        cmd.Parameters.AddWithValue("@produceAmount", produceAmount);
-                        cmd.Parameters.AddWithValue("@requiredAmount", realAmount);
+                        cmd.Parameters.AddWithValue("@produceAmount", realAmount);
+                        cmd.Parameters.AddWithValue("@requiredAmount", produceAmount);
                         cmd.Parameters.AddWithValue("@cardDetail", EncoderUTF(paperDetail));
                         cmd.Parameters.AddWithValue("@year", runNumber[0]);
                         cmd.Parameters.AddWithValue("@rowid", runNumber[1]);
                         cmd.ExecuteNonQuery();
                         MessageBox.Show("บันทึกข้อมูลใบคำสั่งแล้ว", "สถานะการบันทึก");
-                        conn.Close();
+                       
                     }
                     else
                     {
@@ -454,8 +446,7 @@ namespace Factory_Manager
                         String currentYear = DateTime.Now.ToString("yy", ci);
                         String currentDate = DateTime.Now.ToString("dd/MM/yyyy", ci);
                         int nextRow = int.Parse(getLatestRow()) + 1;
-                        conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                        conn.Open();
+                        CheckStateDB();
                         String sql_rec = "INSERT INTO command_card (rowid, cardCode, customerId, " +
                                     "productId, year, receiveNumber, recordDate, finishDate, produceAmount," +
                                     "requiredAmount, cardDetail) VALUES(@rowid, @cardCode," +
@@ -475,10 +466,9 @@ namespace Factory_Manager
                         cmd.Parameters.AddWithValue("@cardDetail", EncoderUTF(paperDetail));
                         cmd.ExecuteNonQuery();
                         MessageBox.Show("สร้างข้อมูลใบคำสั่งแล้ว", "สถานะการบันทึก");
-                        conn.Close();
                         recPass1 = true;
                         recPass2 = true;
-                        recPass3 = true;
+                        //recPass3 = true;
                         recPass4 = true;
                         recPass5 = true;
                         LockScreen("clear");
@@ -496,7 +486,6 @@ namespace Factory_Manager
             }
             catch (Exception xx)
             {
-                conn.Close();
                 ErrorLogCreate(xx);
                 MessageBox.Show("ใส่ข้อมูลที่จำเป็นไม่ครบหรือไม่ถูกต้อง", "สถานะการบันทึก");
             }

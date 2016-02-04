@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Factory_Manager.customerCreate"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="เพิ่ม/แก้ไขข้อมูลลูกค้า" Height="367.528" Width="911.358" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#FFE6E6E6" Icon="image/Fm.png" Closed="Window_Closed">
+        Title="เพิ่ม/แก้ไขข้อมูลลูกค้า" Height="367.528" Width="911.358" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#FFE6E6E6" Icon="image/Fm.png">
     <Grid>
         <Label Content="รหัสลูกค้า" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" FontSize="16"/>
         <TextBox x:Name="idCustomer" HorizontalAlignment="Left" Height="23" Margin="105,16,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" FontSize="16" MaxLength="15"/>
@@ -41,6 +41,7 @@
         <TextBox x:Name="searchQueryNo2" Visibility="Hidden" HorizontalAlignment="Left" Height="23" Margin="509,237,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="53" FontSize="16" MaxLength="5" CharacterCasing="Upper"/>
         <Label x:Name="searchQueryNoDat" Visibility="Hidden" Content="-" HorizontalAlignment="Left" Margin="489,233,0,0" VerticalAlignment="Top" FontSize="16" />
         <Button x:Name="updateBtn" Content="แก้ไขข้อมูล" HorizontalAlignment="Left" Margin="132,278,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" Click="updateBtn_Click" IsEnabled="False"/>
+        <Button x:Name="deleteBtn" Content="ลบลูกค้า" HorizontalAlignment="Left" Margin="356,278,0,0" VerticalAlignment="Top" Width="93" Cursor="Hand" FontSize="16" Click="deleteBtn_Click" IsEnabled="False"/>
 
     </Grid>
 </Window>

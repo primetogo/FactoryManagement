@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -23,10 +24,20 @@ namespace Factory_Manager
     public partial class CreateMember : Window
     {
         MySqlConnection conn = new MySqlConnection();
-        MySqlCommand cmd, cmd2;
+        MySqlCommand cmd;
+        MySqlDataReader reader;
         public CreateMember()
         {
             InitializeComponent();
+        }
+
+        private void CheckStateDB()
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
+                conn.Open();
+            }
         }
 
         private void ClearScreen()
@@ -73,8 +84,7 @@ namespace Factory_Manager
                 }
                 String sqlInsert = "INSERT user (username, password, role) VALUES(@username, @password, @role)";
                 String sqlCheck = "SELECT COUNT(*) FROM user WHERE username=@username";
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
                 byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(pass);
                 byte[] hash = md5.ComputeHash(inputBytes);
@@ -85,29 +95,30 @@ namespace Factory_Manager
                     sb.Append(hash[i].ToString("X2"));
                 }
                 pass = sb.ToString().ToLower();
-                cmd2 = new MySqlCommand(sqlCheck, conn);
-                cmd2.Parameters.AddWithValue("@username", EncoderUTF(userData));
-                MySqlDataReader read = cmd2.ExecuteReader();
-                if (read.GetInt64(0) > 0)
+                cmd = new MySqlCommand(sqlCheck, conn);
+                cmd.Parameters.AddWithValue("@username", EncoderUTF(userData));
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                if (reader.GetInt64(0) > 0)
                 {
+                    reader.Close();
                     throw new Exception("exists");
                 }
                 else
                 {
+                    reader.Close();
                     cmd = new MySqlCommand(sqlInsert, conn);
                     cmd.Parameters.AddWithValue("@username", EncoderUTF(userData));
                     cmd.Parameters.AddWithValue("@password", pass);
                     cmd.Parameters.AddWithValue("@role", role);
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("บันทึกข้อมูลสมาชิกแล้ว", "สถานะการบันทึก");
-                    conn.Close();
                     ClearScreen();
                 }
-                conn.Close();
+                
             }
             catch (Exception er)
             {
-                conn.Close();
                 ErrorLogCreate(er);
                 MessageBox.Show("มี username นี้แล้วหรือลืมใส่รหัสผ่าน", "สถานะการบันทึก");
             }

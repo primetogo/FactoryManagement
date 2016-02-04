@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace Factory_Manager
     {
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd;
+        MySqlDataReader reader;
         public ProductEdit()
         {
             InitializeComponent();
@@ -32,16 +34,23 @@ namespace Factory_Manager
             RetreiveRecipe();
         }
 
+        private void CheckStateDB()
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
+                conn.Open();
+            }
+        }
         private void RetreiveProduct()
         {
             ///Get product list from database
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlGet = "SELECT product_id FROM product";
                 cmd = new MySqlCommand(sqlGet, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 if (reader.HasRows == false)
                 {
                     throw new Exception("No row were found!");
@@ -52,9 +61,8 @@ namespace Factory_Manager
                     {
                         this.prodList.Items.Add(reader.GetString("product_id"));
                     }
-                    conn.Close();
                 }
-
+                reader.Close();
             }
             catch (Exception ex)
             {
@@ -91,14 +99,13 @@ namespace Factory_Manager
             try
             {
                 String iDD = this.prodList.SelectedValue.ToString();
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sql_ret = "SELECT product_name, product_type, unit, product_weight, recipe_id, productRecord,"+
                                  "cutSize, printSize, blowSize, printFrontColor, printBackColor, printFrontAmount, "+
                                  "printBackAmount FROM product WHERE product_id = @prodID";
                 cmd = new MySqlCommand(sql_ret, conn);
                 cmd.Parameters.AddWithValue("@prodID", iDD);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     this.productName.Text = reader.GetString("product_name");
@@ -115,11 +122,10 @@ namespace Factory_Manager
                     this.frontAmount.Text = reader.GetString("printFrontAmount");
                     this.backAmount.Text = reader.GetString("printBackAmount");
                 }
-                conn.Close();
+                reader.Close();
             }
             catch (Exception xa)
             {
-                conn.Close();
                 ErrorLogCreate(xa);
                 LockWindow(true);
             }
@@ -130,11 +136,10 @@ namespace Factory_Manager
             ///Retreive recipe list from database
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlGetRecipe = "SELECT recipe_id FROM recipe";
                 cmd = new MySqlCommand(sqlGetRecipe, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 if (reader.HasRows == false)
                 {
                     throw new Exception("No row were found!");
@@ -145,17 +150,15 @@ namespace Factory_Manager
                     {
                         this.recipeList.Items.Add(reader.GetString("recipe_id"));
                     }
-                    conn.Close();
+                    
                 }
-
+                reader.Close();
             }
             catch (Exception e)
             {
-                conn.Close();
                 ErrorLogCreate(e);
                 LockWindow(true);
             }
-            conn.Close();
         }
 
         private void LockWindow(Boolean locking)
@@ -277,8 +280,7 @@ namespace Factory_Manager
                     throw new Exception("Form is not complete!");
                 }
 
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlUpdate = "UPDATE product SET product_type=@product_type, product_name=@product_name, unit=@unit, product_weight=@product_weight, recipe_id=@recipe_id, productRecord=@spec_size, "+
                     "cutSize=@cutsize, printSize=@printsize, blowSize=@blowsize, printFrontColor=@printfrontcolor, "+
                     "printBackColor=@printbackcolor, printFrontAmount=@printfrontamount, printBackAmount=@printbackamount WHERE product_id=@product_id";
@@ -298,7 +300,6 @@ namespace Factory_Manager
                 cmd.Parameters.AddWithValue("@printbackamount", EncoderUTF(backAmountValue));
                 cmd.Parameters.AddWithValue("@printfrontamount", EncoderUTF(frontAmountValue));
                 cmd.ExecuteNonQuery();
-                conn.Close();
                 LockWindow(false);
                 RetreiveProduct();
                 RetreiveRecipe();
@@ -307,7 +308,6 @@ namespace Factory_Manager
             }
             catch (Exception rr)
             {
-                conn.Close();
                 ErrorLogCreate(rr);
                 MessageBox.Show("กรอกข้อมูลที่จำเป็นไม่ครบ ", "สถานะการบันทึก");
             }
@@ -323,13 +323,11 @@ namespace Factory_Manager
             ///Delete selected product
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String del = "DELETE FROM product WHERE product_id = @prodid";
                 cmd = new MySqlCommand(del, conn);
                 cmd.Parameters.AddWithValue("@prodid", this.prodList.SelectedValue.ToString());
                 cmd.ExecuteNonQuery();
-                conn.Close();
                 LockWindow(false);
                 MessageBox.Show("ลบข้อมูลผลิตภัณฑ์เรียบร้อยแล้ว", "สถานะการบันทึก");
             }

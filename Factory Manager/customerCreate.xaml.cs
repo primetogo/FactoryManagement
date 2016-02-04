@@ -25,7 +25,8 @@ namespace Factory_Manager
     {
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd;
-        //Boolean searchTypeStatus = true;
+        MySqlDataReader reader;
+        String customerIdNumber = "";
 
         public customerCreate()
         {
@@ -171,7 +172,7 @@ namespace Factory_Manager
                         String searchByCustomerId = "SELECT customer_name, customer_id FROM customer WHERE customer_id REGEXP @id";
                         cmd = new MySqlCommand(searchByCustomerId, conn);
                         cmd.Parameters.AddWithValue("@id", cusId);
-                        MySqlDataReader reader = cmd.ExecuteReader();
+                        reader = cmd.ExecuteReader();
                         if (reader.HasRows == false)
                         {
                             reader.Close();
@@ -199,7 +200,7 @@ namespace Factory_Manager
                         String searchByCustomerName = "SELECT customer_name, customer_id FROM customer WHERE customer_name REGEXP @words";
                         cmd = new MySqlCommand(searchByCustomerName, conn);
                         cmd.Parameters.AddWithValue("@words", cusName);
-                        MySqlDataReader reader = cmd.ExecuteReader();
+                        reader = cmd.ExecuteReader();
                         if (reader.HasRows == false)
                         {
                             reader.Close();
@@ -230,7 +231,7 @@ namespace Factory_Manager
                         cmd = new MySqlCommand(searchByOrderNumber, conn);
                         cmd.Parameters.AddWithValue("@rowid", rowNumber.TrimStart('0'));
                         cmd.Parameters.AddWithValue("@year", yearNumber);
-                        MySqlDataReader reader = cmd.ExecuteReader();
+                        reader = cmd.ExecuteReader();
                         if (reader.HasRows == false)
                         {
                             reader.Close();
@@ -268,7 +269,7 @@ namespace Factory_Manager
                         String searchByCardNumber = "SELECT customerId FROM command_card WHERE cardCode REGEXP @word";
                         cmd = new MySqlCommand(searchByCardNumber, conn);
                         cmd.Parameters.AddWithValue("@word", cardNumber);
-                        MySqlDataReader reader = cmd.ExecuteReader();
+                        reader = cmd.ExecuteReader();
                         if (reader.HasRows == false)
                         {
                             reader.Close();
@@ -372,39 +373,12 @@ namespace Factory_Manager
         }
         private void typeSearch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.typeSearch.SelectedIndex == 0)
-            {
-                this.idCustomer.IsEnabled = true;
-                this.idCustomer.Clear();
-                this.customerName.Clear();
-                this.customerDetail.Clear();
-                this.customerName.IsEnabled = false;
-                this.customerDetail.IsEnabled = false;
-            }
-            else if (this.typeSearch.SelectedIndex == 1)
-            {
-                this.customerName.IsEnabled = true;
-                this.idCustomer.Clear();
-                this.customerName.Clear();
-                this.customerDetail.Clear();
-                this.idCustomer.IsEnabled = false;
-                this.customerDetail.IsEnabled = false;
-            }
-            else if (this.typeSearch.SelectedIndex > 1)
-            {
-                this.idCustomer.Clear();
-                this.customerName.Clear();
-                this.customerDetail.Clear();
-                this.customerName.IsEnabled = false;
-                this.idCustomer.IsEnabled = false;
-                this.customerDetail.IsEnabled = false;
-            }
             ShowSearchQueryBox();
         }
 
         private void searchBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (this.typeSearch.SelectedIndex > 0)
+            if (this.typeSearch.SelectedIndex >= 0)
             {
                 this.customerResult.IsEnabled = true;
                 searchCustomer();
@@ -441,10 +415,7 @@ namespace Factory_Manager
         {
             try
             {
-                 this.recordBtn.IsEnabled = false;
-                 this.customerName.IsEnabled = true;
-                 this.customerDetail.IsEnabled = true;
-
+                 
                  String customerNumber = "";
                  var item = sender as ListViewItem;
                  if (item != null && item.IsSelected)
@@ -456,15 +427,18 @@ namespace Factory_Manager
                 CheckStateDB();
                 cmd = new MySqlCommand(searchByCustomerId, conn);
                 cmd.Parameters.AddWithValue("@cusId", customerNumber);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     this.customerName.Text = reader.GetString("customer_name");
                     this.idCustomer.Text = reader.GetString("customer_id");
                     this.customerDetail.Text = reader.GetString("detail");
+                    customerIdNumber = reader.GetString("customer_id");
                 }
                 reader.Close();
-                
+
+                this.recordBtn.IsEnabled = false;
+                this.deleteBtn.IsEnabled = true;
                 this.updateBtn.IsEnabled = true;
                 SucceedLogCreate("Selected customer data retreive:customerCreate");
             }catch(Exception ex){
@@ -476,17 +450,18 @@ namespace Factory_Manager
 
         private void updateBtn_Click(object sender, RoutedEventArgs e)
         {
-            this.idCustomer.IsEnabled = false;
+      
             String customerNewName = this.customerName.Text;
             String customerDetail = this.customerDetail.Text;
             try
             {
-                String updateCustomer = "UPDATE customer SET customer_name = @name, detail = @detail WHERE customer_id = @id";
+                String updateCustomer = "UPDATE customer SET customer_id = @idd, customer_name = @name, detail = @detail WHERE customer_id = @id";
                 CheckStateDB();
                 cmd = new MySqlCommand(updateCustomer, conn);
                 cmd.Parameters.AddWithValue("@name", EncoderUTF(customerNewName));
                 cmd.Parameters.AddWithValue("@detail", EncoderUTF(customerDetail));
-                cmd.Parameters.AddWithValue("@id", this.idCustomer.Text);
+                cmd.Parameters.AddWithValue("@id", customerIdNumber);
+                cmd.Parameters.AddWithValue("@idd", EncoderUTF(this.idCustomer.Text));
                 cmd.ExecuteNonQuery();
                 
                 SucceedLogCreate("Update customer data");
@@ -497,7 +472,7 @@ namespace Factory_Manager
                 CheckStateDB();
                 cmd = new MySqlCommand(searchByCustomerId, conn);
                 cmd.Parameters.AddWithValue("@cusId", this.idCustomer.Text);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     this.customerName.Text = reader.GetString("customer_name");
@@ -518,9 +493,30 @@ namespace Factory_Manager
             this.idCustomer.IsEnabled = true;
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        
+
+        private void deleteBtn_Click(object sender, RoutedEventArgs e)
         {
-            conn.Close();
+            try
+            {
+                CheckStateDB();
+                String sqlDeleteCustomer = "DELETE FROM customer WHERE customer_id = @id";
+                cmd = new MySqlCommand(sqlDeleteCustomer, conn);
+                cmd.Parameters.AddWithValue("@id", customerIdNumber);
+                cmd.ExecuteNonQuery();
+                ClearAllBox();
+                this.idCustomer.IsEnabled = true;
+                MessageBox.Show("ลบลูกค้าสำเร็จแล้ว"
+                , "สถานะการบันทึก", MessageBoxButton.OK, MessageBoxImage.Information);
+                SucceedLogCreate("Delete customer: customerCreate");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
+                , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ErrorLogCreate(ex);
+            }
         }
     }
 }

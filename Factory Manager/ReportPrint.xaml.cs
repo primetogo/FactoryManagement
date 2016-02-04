@@ -148,6 +148,7 @@ namespace Factory_Manager
         }
         private void printBtn_Click(object sender, RoutedEventArgs e)
         {
+           
             Boolean gatePass = false;
             ModeSelect();
             TypeSelect();
@@ -191,12 +192,13 @@ namespace Factory_Manager
                     Application.Current.Properties["queryType"] = "byReceiveNumber";
                     gatePass = true;
                 }
+                
                 if (gatePass == true)
                 {
                     try
                     {
-                        Application.Current.Properties["cardType"] = typeSelected;
                         gatePass = false;
+                        Application.Current.Properties["cardType"] = typeSelected;
                         SucceedLogCreate("reportPrint : printing click");
                         cardList ses = new cardList();
                         ses.Show();

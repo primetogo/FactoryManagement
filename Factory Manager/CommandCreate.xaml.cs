@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -25,7 +26,8 @@ namespace Factory_Manager
     {
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd;
-        Boolean recPass1 = false, recPass2 = false, recPass3 = false;
+        MySqlDataReader reader;
+        Boolean recPass1 = false, recPass2 = false; //recPass3 = false;
         String[] currentNumber = { };
         public CommandCreate()
         {
@@ -37,24 +39,31 @@ namespace Factory_Manager
 
         }
 
+        private void CheckStateDB()
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
+                conn.Open();
+            }
+        }
+
         private void RetreiveCustomer()
         {
             ///Retrieve customer data from database to add in combobox
             try
             {
-                String connecter = (String)Application.Current.Properties["sqlCon"];
-                conn.ConnectionString = connecter;
+                CheckStateDB();
                 String sql_get = "SELECT customer_id FROM customer";
                 cmd = new MySqlCommand(sql_get, conn);
-                conn.Open();
-                MySqlDataReader road = cmd.ExecuteReader();
-                if (road.HasRows == true)
+                reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
                 {
-                    while (road.Read())
+                    while (reader.Read())
                     {
-                        this.customerList.Items.Add(road.GetString("customer_id"));
+                        this.customerList.Items.Add(reader.GetString("customer_id"));
                     }
-                    conn.Close();
+                    reader.Close();
                     SucceedLogCreate("retreive customer data");
                 }
                 else
@@ -64,7 +73,6 @@ namespace Factory_Manager
             }
             catch (Exception e)
             {
-                conn.Close();
                 ErrorLogCreate(e);
                 LockScreen("lock");
             }
@@ -116,29 +124,26 @@ namespace Factory_Manager
             ///Get product list from database
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlGet = "SELECT product_id FROM product";
                 cmd = new MySqlCommand(sqlGet, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 if (reader.HasRows == true)
                 {
                     while (reader.Read())
                     {
                         this.productList.Items.Add(reader.GetString("product_id"));
                     }
-                    conn.Close();
                     SucceedLogCreate("retreive product data");
                 }
                 else
                 {
                     throw new Exception("No row were found!");
-
                 }
+                reader.Close();
             }
             catch (Exception ex)
             {
-                conn.Close();
                 ErrorLogCreate(ex);
                 LockScreen("lock");
             }
@@ -149,8 +154,7 @@ namespace Factory_Manager
             String[] code = new String[4];
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 int number;
 
                 String[] prefix = { "PR", "BL", "CU", "RW" };
@@ -158,14 +162,14 @@ namespace Factory_Manager
                 String currentYear = DateTime.Now.ToString("yy", ci);
                 String getNum = "SELECT COUNT(*) FROM command_card";
                 cmd = new MySqlCommand(getNum, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 reader.Read();
                 number = reader.GetInt32(0);
                 for (int i = 0; i < 4; i++)
                 {
                     code[i] = prefix[i] + currentYear + "-" + (number + 1).ToString().PadLeft(4, '0');
                 }
-                conn.Close();
+                reader.Close();
                 this.printingCode.Text = code[0];
                 this.blowingCode.Text = code[1];
                 this.cuttingCode.Text = code[2];
@@ -267,17 +271,16 @@ namespace Factory_Manager
             ///get customername from custoermer id
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlGet = "SELECT customer_name FROM customer WHERE customer_id = @customerId";
                 cmd = new MySqlCommand(sqlGet, conn);
                 cmd.Parameters.AddWithValue("@customerId", id);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     this.customerName.Text = reader.GetString("customer_name");
                 }
-                conn.Close();
+                reader.Close();
                 SucceedLogCreate("retreive customer name");
             }
             catch (Exception e)
@@ -294,17 +297,16 @@ namespace Factory_Manager
             ///get product name from id
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlGet = "SELECT product_name FROM product WHERE product_id = @cusid";
                 cmd = new MySqlCommand(sqlGet, conn);
                 cmd.Parameters.AddWithValue("@cusid", id);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     this.productName.Text = reader.GetString("product_name");
                 }
-                conn.Close();
+                reader.Close();
                 SucceedLogCreate("retreive product name");
             }
             catch (Exception e)
@@ -334,14 +336,13 @@ namespace Factory_Manager
             String rowCount = "";
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sql_count = "SELECT COUNT(*) FROM command_card";
                 cmd = new MySqlCommand(sql_count, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 reader.Read();
                 rowCount = reader.GetInt64(0).ToString();
-                conn.Close();
+                reader.Close();
                 SucceedLogCreate("retreive last row");
             }
             catch (Exception e)
@@ -392,8 +393,7 @@ namespace Factory_Manager
                 if (checkAll == true)
                 {
                     int nextRow = int.Parse(getLatestRow()) + 1;
-                    conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                    conn.Open();
+                    CheckStateDB();
                     String sql_rec = "INSERT INTO command_card (rowid, cardCode, customerId, " +
                                      "productId, year, receiveNumber, recordDate, finishDate, produceAmount," +
                                      "requiredAmount, cardDetail) VALUES(@rowid, @cardCode," +
@@ -415,9 +415,8 @@ namespace Factory_Manager
                     cmd.ExecuteNonQuery();
                     recPass1 = true;
                     recPass2 = true;
-                    recPass3 = true;
+                    //recPass3 = true;
                     MessageBox.Show("บันทึกข้อมูลใบคำสั่งแล้ว", "สถานะการบันทึก");
-                    conn.Close();
                     SucceedLogCreate("record command card data");
                     LockScreen("clear");
                 }
@@ -428,7 +427,6 @@ namespace Factory_Manager
             }
             catch (Exception xr)
             {
-                conn.Close();
                 ErrorLogCreate(xr);
                 MessageBox.Show("ใส่ข้อมูลที่จำเป็นไม่ครบ,ไม่ถูกต้องหรือมีรหัสนี้ในระบบแล้ว", "สถานะการบันทึก");
             }

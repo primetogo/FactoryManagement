@@ -155,6 +155,7 @@ namespace Factory_Manager
                         loginFlag = true;
                         Application.Current.Properties["role"] = dataComing[1];
                         Application.Current.Properties["iduser"] = dataComing[2];
+                        Application.Current.Properties["user"] = this.username.Text;
                         Mainprogram sesy = new Mainprogram();
                         sesy.Show();
                         this.Close();

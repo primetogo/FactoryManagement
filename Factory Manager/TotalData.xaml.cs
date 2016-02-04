@@ -17,6 +17,7 @@ using CrystalDecisions.Shared;
 using System.Globalization;
 using System.IO;
 using System.Collections;
+using System.Data;
 
 namespace Factory_Manager
 {
@@ -27,10 +28,20 @@ namespace Factory_Manager
     {
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd;
+        MySqlDataReader reader;
 
         public TotalData()
         {
             InitializeComponent();
+        }
+
+        private void CheckStateDB()
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
+                conn.Open();
+            }
         }
 
         private void ErrorLogCreate(Exception text)
@@ -58,8 +69,7 @@ namespace Factory_Manager
         {
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 CultureInfo ci = new CultureInfo("en-US");
                 String start = "", end = "";
                 String[] dataSet = new String[4];
@@ -110,7 +120,7 @@ namespace Factory_Manager
                         }
                     }
 
-                    MySqlDataReader reader = cmd.ExecuteReader();
+                    reader = cmd.ExecuteReader();
                     String currentDate = DateTime.Now.ToString("dd/MM/yyyy", ci);
                     String jobNo = "";
                     String jobProduct = "";
@@ -127,7 +137,7 @@ namespace Factory_Manager
                         jobStart += reader.GetString("recordDate") + " \n ";
                         JobEnd += reader.GetString("finishDate") + " \n ";
                     }
-                    conn.Close();
+                    reader.Close();
                     for (int i = 0; i < product.Count; i++)
                     {
                         jobProduct += GetProductName((String)product[i]) + "\n";
@@ -141,14 +151,11 @@ namespace Factory_Manager
                 }
                 else
                 {
-                    conn.Close();
                     throw new Exception("No choice was selected!");
                 }
             }
             catch (Exception ee)
             {
-               
-                conn.Close();
                 ErrorLogCreate(ee);
                 MessageBox.Show("ไม่มีการเลือกคำค้นหา", "ข้อผิดพลาด");
             }
@@ -161,17 +168,16 @@ namespace Factory_Manager
             String Cusname = "";
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlGet = "SELECT customer_name FROM customer WHERE customer_id = @customerId";
                 cmd = new MySqlCommand(sqlGet, conn);
                 cmd.Parameters.AddWithValue("@customerId", id);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     Cusname = reader.GetString("customer_name");
                 }
-                conn.Close();
+                reader.Close();
             }
             catch (Exception e)
             {
@@ -188,17 +194,16 @@ namespace Factory_Manager
             String prodName = "";
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sqlGet = "SELECT product_name FROM product WHERE product_id = @cusid";
                 cmd = new MySqlCommand(sqlGet, conn);
                 cmd.Parameters.AddWithValue("@cusid", id);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     prodName = reader.GetString("product_name");
                 }
-                conn.Close();
+                reader.Close();
             }
             catch (Exception e)
             {

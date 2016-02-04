@@ -27,6 +27,8 @@ namespace Factory_Manager
             InitializeComponent();
             ScreenPreview();
         }
+
+
         private void ScreenPreview()
         {
             try

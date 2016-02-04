@@ -1,6 +1,8 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,8 +21,10 @@ namespace Factory_Manager
     /// <summary>
     /// Interaction logic for Main.xaml
     /// </summary>
+    
     public partial class Mainprogram : Window
     {
+        MySqlConnection conn = new MySqlConnection();
         public Mainprogram()
         {
             InitializeComponent();
@@ -33,6 +37,7 @@ namespace Factory_Manager
             {
                 this.system_main.Visibility = Visibility.Visible;
             }
+            this.username.Text = (String)Application.Current.Properties["user"];
         }
 
        
@@ -41,7 +46,11 @@ namespace Factory_Manager
         {
             if (MessageBox.Show("ต้องการจะออกจากโปรแกรมหรือไม่?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
+                    conn.Close();
+                }
                 Application.Current.Shutdown();
             }
             else

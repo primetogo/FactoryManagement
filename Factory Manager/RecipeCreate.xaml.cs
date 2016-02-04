@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -23,15 +24,25 @@ namespace Factory_Manager
     public partial class RecipeCreate : Window
     {
         MySqlConnection conn = new MySqlConnection();
-        MySqlCommand cmd, count;
+        MySqlCommand cmd;
+        MySqlDataReader reader;
         int matCount = 0, recordCount = 0;
         String mat_id = "";
-        Boolean recPass = false;
+        //recPass = false;
         public RecipeCreate()
         {
             InitializeComponent();
             GetMaterial();
             CheckMaterialPerm();
+        }
+
+        private void CheckStateDB()
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
+                conn.Open();
+            }
         }
         private void GetMaterial()
         {
@@ -39,22 +50,21 @@ namespace Factory_Manager
             try
             {
 
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sql_get_mat = "SELECT idmaterial FROM materiallist";
                 String sql_count = "SELECT COUNT(*) FROM materiallist";
                 cmd = new MySqlCommand(sql_get_mat, conn);
-                count = new MySqlCommand(sql_count, conn);
-                MySqlDataReader cat = count.ExecuteReader();
-                cat.Read();
-                matCount = (int)cat.GetInt64(0);
-                cat.Close();
-                MySqlDataReader read = cmd.ExecuteReader();
-                while (read.Read())
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    this.materialList.Items.Add(read.GetString("idmaterial"));
+                    this.materialList.Items.Add(reader.GetString("idmaterial"));
                 }
-                conn.Close();
+                reader.Close();
+                cmd = new MySqlCommand(sql_count, conn);
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                matCount = (int)reader.GetInt64(0);
+                reader.Close();
             }
             catch (Exception e)
             {
@@ -128,20 +138,22 @@ namespace Factory_Manager
         private void InsertMaterial(String matId)
         {
             ///Retreive material data and insert output in name box and material box
-            try { 
-            conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-            conn.Open();
-            String sql_get_data = "SELECT materialcode, materialname FROM materiallist WHERE idmaterial = @idmaterial";
-            cmd = new MySqlCommand(sql_get_data, conn);
-            cmd.Parameters.AddWithValue("@idmaterial", matId);
-            MySqlDataReader read = cmd.ExecuteReader();
-            while (read.Read())
+            try
             {
-                this.materialName.Text = read.GetString("materialcode") + "   " + read.GetString("materialname");
+                CheckStateDB();
+                String sql_get_data = "SELECT materialcode, materialname FROM materiallist WHERE idmaterial = @idmaterial";
+                cmd = new MySqlCommand(sql_get_data, conn);
+                cmd.Parameters.AddWithValue("@idmaterial", matId);
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    this.materialName.Text = reader.GetString("materialcode") + "   " + reader.GetString("materialname");
+                }
+                reader.Close();
+               
             }
-            conn.Close();
-            }catch(Exception e){
-                conn.Close();
+            catch (Exception e)
+            {
                 ErrorLogCreate(e);
                 MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
                                     , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -260,8 +272,7 @@ namespace Factory_Manager
                     throw new Exception("Form is not complete!");
                 }
 
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String sql_insert = "INSERT INTO recipe (recipe_id, recipe_name, detail, materialCode) VALUES(@recipe_id, @recipe_name, @detail, @materialCode)";
                 cmd = new MySqlCommand(sql_insert, conn);
                 cmd.Parameters.AddWithValue("@recipe_id", EncoderUTF(id));
@@ -270,7 +281,7 @@ namespace Factory_Manager
                 cmd.Parameters.AddWithValue("@materialCode", EncoderUTF(recipe));
                 cmd.ExecuteNonQuery();
                 recordCount = 1;
-                recPass = true;
+                //recPass = true;
                 this.recipeCode.Clear();
                 this.recipeDetail.Clear();
                 this.recipeMaterial.Clear();
@@ -283,7 +294,7 @@ namespace Factory_Manager
                 ErrorLogCreate(xx);
                 MessageBox.Show("กรอกข้อมูลที่จำเป็นไม่ครบหรือมีรหัสสูตรนี้แล้ว", "สถานะการบันทึก");
             }
-            conn.Close();
+            
 
         }
 

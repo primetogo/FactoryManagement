@@ -4,12 +4,16 @@
         xmlns:Viewer="clr-namespace:SAPBusinessObjects.WPF.Viewer;assembly=SAPBusinessObjects.WPF.Viewer" x:Class="Factory_Manager.Mainprogram"
         Title="Factory Management 2015: บริษัท ไทยแสงเจริญ จำกัด" Height="374" Width="904.467" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowState="Maximized" FontSize="16" Closing="Window_Closing" Icon="image/Fm.png">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="316*"/>
+            <RowDefinition Height="29*"/>
+        </Grid.RowDefinitions>
 
         <Grid.Background>
             <ImageBrush ImageSource="image/fm pro.jpg" Stretch="UniformToFill"/>
         </Grid.Background>
 
-        <DockPanel x:Name="topMenu" Height="27" VerticalAlignment="Top" Grid.ColumnSpan="2">
+        <DockPanel x:Name="topMenu" Height="27" VerticalAlignment="Top">
             <Menu Height="27" VerticalAlignment="Top" FontSize="16" Cursor="Hand">
                 <MenuItem Header="เพิ่ม/แก้ไขข้อมูลลูกค้า" Click="MenuItem_Click" />
 
@@ -29,7 +33,7 @@
                 </MenuItem>
                 <MenuItem Header="พิมพ์ใบคำสั่ง" Click="MenuItem_Click_10"/>
                 <MenuItem Header="รายงานการผลิต" Click="MenuItem_Click_11" />
-                <MenuItem x:Name="system_main" Header="จัดการข้อมูลระบบ">
+                <MenuItem x:Name="system_main" Header="จัดการข้อมูลสมาชิก">
                     <MenuItem Header="เพิ่มสมาชิกเข้าระบบ" HorizontalAlignment="Left" Width="295" Click="MenuItem_Click_12"/>
                     <MenuItem Header="แก้ไขรหัสผ่านสมาชิก" HorizontalAlignment="Left" Width="295" Click="MenuItem_Click_13"/>
                 </MenuItem>
@@ -37,7 +41,15 @@
 
             </Menu>
         </DockPanel>
-        <Image Height="214" Margin="0,42,0,0" VerticalAlignment="Top" Source="image/Fm.png" Stretch="Fill" HorizontalAlignment="Right" Width="233" Grid.Column="1"/>
+        <Image Height="214" Margin="0,42,0,0" VerticalAlignment="Top" Source="image/Fm.png" Stretch="Fill" HorizontalAlignment="Right" Width="233"/>
+        <StatusBar Grid.Row="1" Height="29" VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="USER:" Width="42" Margin="10,0,0,0" FontSize="16"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock x:Name="username" Width="100" Margin="0" FontSize="16"/>
+            </StatusBarItem>
+        </StatusBar>
 
     </Grid>
 </Window>

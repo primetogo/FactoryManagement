@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace Factory_Manager
     {
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd;
+        MySqlDataReader reader;
         public EditMember()
         {
             InitializeComponent();
@@ -31,26 +33,33 @@ namespace Factory_Manager
             LoadMemberList();
         }
 
+        private void CheckStateDB()
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
+                conn.Open();
+            }
+        }
+
         private void LoadMemberList()
         {
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String member = "SELECT iduser FROM user";
                 cmd = new MySqlCommand(member, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 if (reader.HasRows == true)
                 {
                     while (reader.Read())
                     {
                         this.memberList.Items.Add(reader.GetString("iduser"));
                     }
-                    conn.Close();
+                    reader.Close();
                 }
                 else
                 {
-                    conn.Close();
                     LockScreen();
                 }
             }
@@ -89,12 +98,11 @@ namespace Factory_Manager
         {
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String getData = "SELECT username, role FROM user WHERE iduser = @iduser";
                 cmd = new MySqlCommand(getData, conn);
                 cmd.Parameters.AddWithValue("@iduser", id);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     this.username.Text = reader.GetString("username");
@@ -107,7 +115,7 @@ namespace Factory_Manager
                         this.user.IsChecked = true;
                     }
                 }
-                conn.Close();
+                reader.Close();
             }catch(Exception e){
                 ErrorLogCreate(e);
                 MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
@@ -123,8 +131,7 @@ namespace Factory_Manager
                 String pass = this.password.Password.ToString();
                 if (string.IsNullOrWhiteSpace(user) == false && string.IsNullOrWhiteSpace(pass) == false)
                 {
-                    conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                    conn.Open();
+                    CheckStateDB();
                     String updating = "UPDATE user SET username=@username, password=@password, role=@role WHERE iduser=@iduser";
                     String role = "";
                     String id = this.memberList.SelectedValue.ToString();
@@ -152,7 +159,6 @@ namespace Factory_Manager
                     cmd.Parameters.AddWithValue("@iduser", id);
                     cmd.Parameters.AddWithValue("@role", role);
                     cmd.ExecuteNonQuery();
-                    conn.Close();
                     MessageBox.Show("เปลี่ยนรหัสผ่านเรียบร้อย", "สถานะบันทึก");
                 }
                 else
