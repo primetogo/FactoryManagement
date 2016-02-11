@@ -27,7 +27,7 @@ namespace Factory_Manager
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd;
         MySqlDataReader reader;
-        Boolean recPass1 = false, recPass2 = false; //recPass3 = false;
+        Boolean recPass1 = false, recPass2 = false;
         String[] currentNumber = { };
         public CommandCreate()
         {
@@ -160,14 +160,11 @@ namespace Factory_Manager
                 String[] prefix = { "PR", "BL", "CU", "RW" };
                 CultureInfo ci = new CultureInfo("en-US");
                 String currentYear = DateTime.Now.ToString("yy", ci);
-                String getNum = "SELECT COUNT(*) FROM command_card";
-                cmd = new MySqlCommand(getNum, conn);
-                reader = cmd.ExecuteReader();
-                reader.Read();
-                number = reader.GetInt32(0);
+                
+                number = int.Parse(getLatestRow());
                 for (int i = 0; i < 4; i++)
                 {
-                    code[i] = prefix[i] + currentYear + "-" + (number + 1).ToString().PadLeft(4, '0');
+                    code[i] = prefix[i] + currentYear + "-" + (number + 1).ToString().PadLeft(5, '0');
                 }
                 reader.Close();
                 this.printingCode.Text = code[0];
@@ -200,9 +197,9 @@ namespace Factory_Manager
                 this.matCode.IsEnabled = true;
                 this.paperNumber.Clear();
                 this.paperNumber.IsEnabled = true;
-                this.paperRealAmount.Clear();
+                this.paperRealAmount.Text = "0";
                 this.paperRealAmount.IsEnabled = true;
-                this.paperReqAmount.Clear();
+                this.paperReqAmount.Text = "0";
                 this.paperReqAmount.IsEnabled = true;
                 this.finishDate.SelectedDate = null;
                 this.finishDate.IsEnabled = true;
@@ -237,9 +234,9 @@ namespace Factory_Manager
                 this.matCode.IsEnabled = false;
                 this.paperNumber.Clear();
                 this.paperNumber.IsEnabled = false;
-                this.paperRealAmount.Clear();
+                this.paperRealAmount.Text = "0";
                 this.paperRealAmount.IsEnabled = false;
-                this.paperReqAmount.Clear();
+                this.paperReqAmount.Text = "0";
                 this.paperReqAmount.IsEnabled = false;
                 this.finishDate.SelectedDate = null;
                 this.finishDate.IsEnabled = false;
@@ -337,11 +334,18 @@ namespace Factory_Manager
             try
             {
                 CheckStateDB();
-                String sql_count = "SELECT COUNT(*) FROM command_card";
+                String sql_count = "SELECT rowid FROM command_card ORDER BY rowid DESC LIMIT 1";
                 cmd = new MySqlCommand(sql_count, conn);
                 reader = cmd.ExecuteReader();
-                reader.Read();
-                rowCount = reader.GetInt64(0).ToString();
+                if (reader.HasRows == true)
+                {
+                    reader.Read();
+                    rowCount = reader.GetString("rowid");
+                }
+                else
+                {
+                    rowCount = "0";
+                }
                 reader.Close();
                 SucceedLogCreate("retreive last row");
             }
@@ -393,12 +397,14 @@ namespace Factory_Manager
                 if (checkAll == true)
                 {
                     int nextRow = int.Parse(getLatestRow()) + 1;
+                    String user = (String)Application.Current.Properties["user"];
                     CheckStateDB();
+                    
                     String sql_rec = "INSERT INTO command_card (rowid, cardCode, customerId, " +
                                      "productId, year, receiveNumber, recordDate, finishDate, produceAmount," +
-                                     "requiredAmount, cardDetail) VALUES(@rowid, @cardCode," +
+                                     "requiredAmount, cardDetail, createUser, editUser) VALUES(@rowid, @cardCode," +
                                      "@customerId, @productId, @year, @receiveNumber, @recordDate, " +
-                                     "@finishDate, @produceAmount, @requiredAmount, @cardDetail)";
+                                     "@finishDate, @produceAmount, @requiredAmount, @cardDetail, @create, @edit)";
 
                     cmd = new MySqlCommand(sql_rec, conn);
                     cmd.Parameters.AddWithValue("@rowid", nextRow);
@@ -412,30 +418,34 @@ namespace Factory_Manager
                     cmd.Parameters.AddWithValue("@produceAmount", produceAmount);
                     cmd.Parameters.AddWithValue("@requiredAmount", realAmount);
                     cmd.Parameters.AddWithValue("@cardDetail", EncoderUTF(paperDetail));
+                    cmd.Parameters.AddWithValue("@create", user);
+                    cmd.Parameters.AddWithValue("@edit", "-");
                     cmd.ExecuteNonQuery();
                     recPass1 = true;
                     recPass2 = true;
-                    //recPass3 = true;
+                    LockScreen("clear");
                     MessageBox.Show("บันทึกข้อมูลใบคำสั่งแล้ว", "สถานะการบันทึก");
                     SucceedLogCreate("record command card data");
-                    LockScreen("clear");
+                    
                 }
                 else
                 {
-                    throw new Exception("Form is not complete!");
+                    MessageBox.Show("กรอกข้อมูลไม่ครบถ้วน"
+                                     , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             catch (Exception xr)
             {
                 ErrorLogCreate(xr);
-                MessageBox.Show("ใส่ข้อมูลที่จำเป็นไม่ครบ,ไม่ถูกต้องหรือมีรหัสนี้ในระบบแล้ว", "สถานะการบันทึก");
+                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private void recBtn_Click(object sender, RoutedEventArgs e)
         {
             RecordCommandCard();
-            LockScreen("clear");
+            
 
         }
 
@@ -460,6 +470,36 @@ namespace Factory_Manager
             else
             {
                 recPass2 = false;
+            }
+        }
+
+        private void paperReqAmount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int test;
+            
+            if (string.IsNullOrEmpty(this.paperReqAmount.Text) == false || string.IsNullOrWhiteSpace(this.paperReqAmount.Text) == false)
+            {
+                if (int.TryParse(this.paperReqAmount.Text, out test) == false)
+                {
+                    MessageBox.Show("กรุณาใส่ข้อมูลที่เป็นตัวเลข", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    this.paperReqAmount.Clear();
+                }
+                
+            }
+            
+        }
+
+        private void paperRealAmount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int test;
+            
+            if (string.IsNullOrEmpty(this.paperReqAmount.Text) == false || string.IsNullOrWhiteSpace(this.paperReqAmount.Text) == false)
+            {
+                if (int.TryParse(this.paperRealAmount.Text, out test) == false)
+                {
+                    MessageBox.Show("กรุณาใส่ข้อมูลที่เป็นตัวเลข", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    this.paperRealAmount.Clear();
+                }
             }
         }
     }

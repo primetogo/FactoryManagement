@@ -21,7 +21,8 @@
         <TextBox x:Name="materialAmount" HorizontalAlignment="Left" Height="23" Margin="601,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="72" FontSize="16" TextChanged="materialAmount_TextChanged" />
         <Label Content="ปริมาณ(%)" HorizontalAlignment="Left" Margin="515,235,0,0" VerticalAlignment="Top" FontSize="16"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="337" Margin="507,17,0,0" VerticalAlignment="Top" Width="174"/>
-        <ComboBox x:Name="recipeList" HorizontalAlignment="Left" Margin="158,30,0,0" VerticalAlignment="Top" Width="198" FontSize="16" SelectionChanged="recipeList_SelectionChanged"/>
         <Button x:Name="DelRecBtn" Content="ลบสูตรการผลิต" HorizontalAlignment="Left" Margin="149,329,0,0" VerticalAlignment="Top" Width="103" FontSize="16" Click="DelRecBtn_Click"/>
+        <TextBox x:Name="recipeCode" HorizontalAlignment="Left" Height="23" Margin="170,32,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="163" FontSize="16"/>
+        <Button x:Name="searchBtn" Content="ค้นหาสูตรการผลิต" HorizontalAlignment="Left" Margin="364,31,0,0" VerticalAlignment="Top" Width="125" FontSize="16" Cursor="Hand" Click="searchBtn_Click" />
     </Grid>
 </Window>

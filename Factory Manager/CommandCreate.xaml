@@ -12,9 +12,9 @@
         <Label Content="เลขที่ใบรับสั่ง" HorizontalAlignment="Left" Margin="323,66,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
         <TextBox x:Name="paperNumber" HorizontalAlignment="Left" Height="23" Margin="428,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
         <Label Content="ปริมาณที่ผลิต" HorizontalAlignment="Left" Margin="323,95,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
-        <TextBox x:Name="paperReqAmount" HorizontalAlignment="Left" Height="23" Margin="440,102,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" FontSize="16"/>
+        <TextBox x:Name="paperReqAmount" HorizontalAlignment="Left" Height="23" Margin="440,102,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" FontSize="16" TextChanged="paperReqAmount_TextChanged"/>
         <Label Content="ปริมาณที่ต้องการ" HorizontalAlignment="Left" Margin="323,128,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
-        <TextBox x:Name="paperRealAmount" HorizontalAlignment="Left" Height="23" Margin="441,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" FontSize="16"/>
+        <TextBox x:Name="paperRealAmount" HorizontalAlignment="Left" Height="23" Margin="441,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" FontSize="16" TextChanged="paperRealAmount_TextChanged"/>
         <DatePicker x:Name="finishDate" HorizontalAlignment="Left" Margin="391,35,0,0" VerticalAlignment="Top" FontSize="16" Focusable = "False" />
         <Label Content="วันที่ส่ง" HorizontalAlignment="Left" Margin="320,32,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
         <Label x:Name="aaa" Content="รหัสลูกค้า" HorizontalAlignment="Left" Margin="31,177,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>

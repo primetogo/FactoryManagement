@@ -66,7 +66,6 @@ namespace Factory_Manager
             }
             catch (Exception ex)
             {
-                conn.Close();
                 ErrorLogCreate(ex);
                 LockWindow(true);
             }

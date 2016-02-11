@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="แก้ไข/ลบใบคำสั่ง" Height="515" Width="1034" Icon="image/Fm.png" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#FFE6E6E6">
     <Grid>
-        <Button x:Name="recBtn" Content="บันทึกข้อมูล" HorizontalAlignment="Left" Margin="261,388,0,0" VerticalAlignment="Top" Width="89" FontSize="16" Click="recBtn_Click"/>
-        <Button x:Name="deleteBtn" Content="ลบข้อมูล" HorizontalAlignment="Left" Margin="392,388,0,0" VerticalAlignment="Top" Width="75" FontSize="16" Click="deleteBtn_Click"/>
+        <Button x:Name="recBtn" Content="บันทึกข้อมูล" HorizontalAlignment="Left" Margin="261,388,0,0" VerticalAlignment="Top" Width="89" FontSize="16" Click="recBtn_Click" IsEnabled="False"/>
+        <Button x:Name="deleteBtn" Content="ลบข้อมูล" HorizontalAlignment="Left" Margin="392,388,0,0" VerticalAlignment="Top" Width="75" FontSize="16" Click="deleteBtn_Click" IsEnabled="False"/>
         <GroupBox Header="หมายเหตุ" HorizontalAlignment="Left" Margin="668,11,0,0" VerticalAlignment="Top" FontSize="16" Width="330" Height="445"/>
         <GroupBox Header="รหัสใบคำสั่ง" HorizontalAlignment="Left" Margin="27,47,0,0" VerticalAlignment="Top" FontSize="16" Width="275" Height="162"/>
         <Label Content="ใบคำสั่งพิมพ์" HorizontalAlignment="Left" Margin="34,70,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
@@ -12,9 +12,9 @@
         <Label Content="เลขที่ใบรับสั่ง" HorizontalAlignment="Left" Margin="324,106,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
         <TextBox x:Name="paperNumber" HorizontalAlignment="Left" Height="23" Margin="429,113,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
         <Label Content="ปริมาณที่ต้องการ" HorizontalAlignment="Left" Margin="324,135,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
-        <TextBox x:Name="paperReqAmount" HorizontalAlignment="Left" Height="23" Margin="441,142,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" FontSize="16"/>
+        <TextBox x:Name="paperReqAmount" HorizontalAlignment="Left" Height="23" Margin="441,142,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" FontSize="16" TextChanged="paperReqAmount_TextChanged"/>
         <Label Content="ปริมาณที่ผลิต" HorizontalAlignment="Left" Margin="324,168,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
-        <TextBox x:Name="paperRealAmount" HorizontalAlignment="Left" Height="23" Margin="442,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" FontSize="16"/>
+        <TextBox x:Name="paperRealAmount" HorizontalAlignment="Left" Height="23" Margin="442,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" FontSize="16" TextChanged="paperRealAmount_TextChanged"/>
         <DatePicker x:Name="finishDate" HorizontalAlignment="Left" Margin="392,75,0,0" VerticalAlignment="Top" FontSize="16" Focusable = "False" />
         <Label Content="วันที่ส่ง" HorizontalAlignment="Left" Margin="321,72,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
         <Label x:Name="aaa" Content="รหัสลูกค้า" HorizontalAlignment="Left" Margin="32,217,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
@@ -38,7 +38,9 @@
         <Label x:Name="aaa_Copy8" Content="ใบคำสั่งตัด" HorizontalAlignment="Left" Margin="689,168,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
         <TextBox x:Name="cuttingPaperDetail" HorizontalAlignment="Left" Height="95" Margin="689,201,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="288" FontSize="16"/>
         <Label Content="ลำดับสั่ง" HorizontalAlignment="Left" Margin="34,10,0,0" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="0.444,0.226"/>
-        <ComboBox x:Name="commandList" HorizontalAlignment="Left" Margin="110,15,0,0" VerticalAlignment="Top" Width="175" FontSize="16" SelectionChanged="commandList_SelectionChanged_1"/>
+        <TextBox x:Name="orderNumber" HorizontalAlignment="Left" Height="23" Margin="114,17,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="151" FontSize="16" IsEnabled="False"/>
+        <Button x:Name="searchBtn" Content="ค้นหาใบคำสั่ง" HorizontalAlignment="Left" Margin="473,16,0,0" VerticalAlignment="Top" Width="103" FontSize="16" Click="searchBtn_Click"  />
+        <TextBox x:Name="searchQuery" HorizontalAlignment="Left" Height="23" Margin="308,17,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="151" FontSize="16" />
 
     </Grid>
 </Window>

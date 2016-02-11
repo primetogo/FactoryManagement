@@ -26,13 +26,12 @@ namespace Factory_Manager
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd;
         MySqlDataReader reader;
-        int matCount = 0, recipeCount = 0, review = 0, add = 0, del = 0;
+        String recipeCoder = "";
         public RecipeEdit()
         {
             InitializeComponent();
-            RetreiveRecipeList();
             GetMaterial();
-            CheckMaterialPerm();
+            setUpdateData();
         }
 
         private void CheckStateDB()
@@ -44,35 +43,7 @@ namespace Factory_Manager
             }
         }
 
-        private void RetreiveRecipeList()
-        {
-            ///Get recipe list from database
-            try
-            {
-                CheckStateDB();
-                String sql_get = "SELECT recipe_id FROM recipe";
-                String sql_count = "SELECT COUNT(*) FROM recipe";
-                cmd = new MySqlCommand(sql_count, conn);
-                reader = cmd.ExecuteReader();
-                reader.Read();
-                recipeCount = (int)reader.GetInt64(0);
-                reader.Close();
-                cmd = new MySqlCommand(sql_get, conn);
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    this.recipeList.Items.Add(reader.GetString("recipe_id"));
-                }
-                reader.Close();
-                
-            }
-            catch (Exception e)
-            {
-                ErrorLogCreate(e);
-                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
-                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-        }
+
 
         private void ErrorLogCreate(Exception text)
         {
@@ -112,7 +83,7 @@ namespace Factory_Manager
                     this.recipeMaterial.Text = reader.GetString("materialCode");
                 }
                 reader.Close();
-               
+
             }
             catch (Exception e)
             {
@@ -172,7 +143,7 @@ namespace Factory_Manager
                 {
                     this.materialName.Text = reader.GetString("materialcode") + "   " + reader.GetString("materialname");
                 }
-                add = 1;
+                //add = 1;
                 reader.Close();
             }
             catch (Exception e)
@@ -189,30 +160,23 @@ namespace Factory_Manager
             ///Get material list from database and add to combobox
             try
             {
+                this.materialList.Items.Clear();
                 CheckStateDB();
                 String sql_get_mat = "SELECT idmaterial FROM materiallist";
-                String sql_count = "SELECT COUNT(*) FROM materiallist";
                 cmd = new MySqlCommand(sql_get_mat, conn);
                 reader = cmd.ExecuteReader();
-                while (reader.Read())
+                if (reader.HasRows == true)
                 {
-                    this.materialList.Items.Add(reader.GetString("idmaterial"));
-                }
-                reader.Close();
-                if (matCount == 0)
-                {
-                    this.materialList.IsEnabled = false;
+                    this.materialList.IsEnabled = true;
+                    while (reader.Read())
+                    {
+                        this.materialList.Items.Add(reader.GetString("idmaterial"));
+                    }
                 }
                 else
                 {
-                    this.materialList.IsEnabled = true;
+                    this.materialList.IsEnabled = false;
                 }
-                
-
-                cmd = new MySqlCommand(sql_count, conn);
-                reader = cmd.ExecuteReader();
-                reader.Read();
-                matCount = (int)reader.GetInt64(0);
                 reader.Close();
 
             }
@@ -223,56 +187,7 @@ namespace Factory_Manager
                                     , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
-        private void CheckMaterialPerm()
-        {
-            ///Prevent user from enter data with no material added
-            if (recipeCount == 0)
-            {
-                this.materialList.Items.Clear();
-                this.recipeList.Items.Clear();
-                this.recipeList.Items.Add("ไม่มีข้อมูลสูตรบันทึกเอาไว้");
-                this.recipeList.SelectedIndex = 0;
-                this.recipeList.IsEnabled = false;
-                this.materialList.IsEnabled = false;
-                this.recipeName.IsEnabled = false;
-                this.recipeName.Clear();
-                this.recipeDetail.IsEnabled = false;
-                this.recipeDetail.Clear();
-                this.recipeMaterial.IsEnabled = false;
-                this.recipeMaterial.Clear();
-                this.materialList.IsEnabled = false;
-                this.materialName.IsEnabled = false;
-                this.materialAmount.IsEnabled = false;
-                this.recBtn.IsEnabled = false;
-                this.delBtn.IsEnabled = false;
-                this.addBtn.IsEnabled = false;
-                this.clearBtn.IsEnabled = false;
-                this.DelRecBtn.IsEnabled = false;
-            }
-            else
-            {
-                this.materialList.Items.Clear();
-                this.recipeList.Items.Clear();
-                this.recipeList.IsEnabled = true;
-                this.materialList.IsEnabled = true;
-                this.recipeName.IsEnabled = true;
-                this.recipeName.Clear();
-                this.recipeDetail.IsEnabled = true;
-                this.recipeDetail.Clear();
-                this.recipeMaterial.IsEnabled = true;
-                this.recipeMaterial.Clear();
-                this.materialList.IsEnabled = true;
-                this.materialName.IsEnabled = true;
-                this.materialAmount.IsEnabled = true;
-                this.recBtn.IsEnabled = true;
-                this.delBtn.IsEnabled = true;
-                this.addBtn.IsEnabled = true;
-                this.clearBtn.IsEnabled = true;
-                this.DelRecBtn.IsEnabled = true;
-                GetMaterial();
-                RetreiveRecipeList();
-            }
-        }
+
 
         private void ReceiveMaterial(String boundId, String amount)
         {
@@ -293,23 +208,25 @@ namespace Factory_Manager
                     }
                     if (total + Decimal.Parse(amount) > 100)
                     {
-                        throw new Exception("Too much ingrediant amount!");
+                        MessageBox.Show("วัตถุดิบมีปริมาณเกิน 100 %"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
-                    oldMat += ", " + boundId + ":" + amount;
-                    this.recipeMaterial.Text = oldMat;
+                    else
+                    {
+                        oldMat += ", " + boundId + ":" + amount;
+                        this.recipeMaterial.Text = oldMat;
+                    }
                 }
                 else
                 {
                     this.recipeMaterial.Text = boundId + ":" + amount;
                 }
-                this.materialName.Clear();
-                this.materialAmount.Clear();
-                this.materialList.SelectedIndex = -1;
             }
             catch (Exception y)
             {
                 ErrorLogCreate(y);
-                MessageBox.Show("ปริมาณวัตถุดิบเกิน 100%", "ข้อผิดพลาด");
+                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -318,7 +235,7 @@ namespace Factory_Manager
             ///when user click record button it will record recipe data
             try
             {
-                String id = this.recipeList.SelectedValue.ToString();
+                String id = recipeCoder;
                 String name = this.recipeName.Text;
                 String detail = this.recipeDetail.Text;
                 String recipe = this.recipeMaterial.Text;
@@ -328,33 +245,34 @@ namespace Factory_Manager
                 inputCheck = string.IsNullOrWhiteSpace(detail);
                 if (inputCheck == true)
                 {
-                    throw new Exception("Form is not complete!");
+                    MessageBox.Show("กรอกข้อมูลไม่ครบหรือไม่ได้เลือกรหัสสูตร"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-
-
-                CheckStateDB();
-                String sql_insert = "UPDATE recipe SET recipe_name = @recipe_name, detail = @detail, materialCode = @materialCode WHERE recipe_id=@recipe_id";
-                cmd = new MySqlCommand(sql_insert, conn);
-                cmd.Parameters.AddWithValue("@recipe_id", id);
-                cmd.Parameters.AddWithValue("@recipe_name", name);
-                cmd.Parameters.AddWithValue("@detail", detail);
-                cmd.Parameters.AddWithValue("@materialCode", recipe);
-                cmd.ExecuteNonQuery();
-                this.recipeDetail.Clear();
-                this.recipeMaterial.Clear();
-                this.recipeName.Clear();
-                review = 1;
-                MessageBox.Show("ทำการบันทึกข้อมูลสูตรเรียบร้อยแล้ว", "สถานะการบันทึก");
-                this.recipeList.SelectedIndex = -1;
-                
+                else
+                {
+                    CheckStateDB();
+                    String sql_insert = "UPDATE recipe SET recipe_name = @recipe_name, detail = @detail, materialCode = @materialCode WHERE recipe_id=@recipe_id";
+                    cmd = new MySqlCommand(sql_insert, conn);
+                    cmd.Parameters.AddWithValue("@recipe_id", id);
+                    cmd.Parameters.AddWithValue("@recipe_name", name);
+                    cmd.Parameters.AddWithValue("@detail", detail);
+                    cmd.Parameters.AddWithValue("@materialCode", recipe);
+                    cmd.ExecuteNonQuery();
+                    this.recipeDetail.Clear();
+                    this.recipeMaterial.Clear();
+                    this.recipeName.Clear();
+                    MessageBox.Show("ทำการบันทึกข้อมูลสูตรเรียบร้อยแล้ว", "สถานะการบันทึก");
+                    GetMaterial();
+                }
             }
             catch (Exception x)
             {
                 ErrorLogCreate(x);
-                MessageBox.Show("กรอกข้อมูลที่จำเป็นไม่ครบ", "สถานะการบันทึก");
+                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
 
             }
-         
+
 
         }
 
@@ -362,23 +280,37 @@ namespace Factory_Manager
         {
             try
             {
-                if (!(string.IsNullOrWhiteSpace(this.recipeList.SelectedValue.ToString())))
+                if (!(string.IsNullOrWhiteSpace(recipeCoder)))
                 {
                     CheckStateDB();
-                    String sql_del = "DELETE FROM recipe WHERE recipe_id = @recipe_id";
-                    cmd = new MySqlCommand(sql_del, conn);
-                    cmd.Parameters.AddWithValue("@recipe_id", this.recipeList.SelectedValue.ToString());
-                    cmd.ExecuteNonQuery();
-                    del = 1;
-                    MessageBox.Show("ลบข้อมูลสูตรแล้ว", "สถานะการบันทึก");
-                    RetreiveRecipeList();
-                    CheckMaterialPerm();
-
+                    Boolean recordFound = false;
+                    String sqlTestProd = "SELECT product_name FROM product WHERE recipe_id = @rec";
+                    cmd = new MySqlCommand(sqlTestProd, conn);
+                    cmd.Parameters.AddWithValue("@rec", recipeCoder);
+                    reader = cmd.ExecuteReader();
+                    if (reader.HasRows == true)
+                    {
+                        recordFound = true;
+                    }
+                    reader.Close();
+                    if (recordFound == false)
+                    {
+                        String sql_del = "DELETE FROM recipe WHERE recipe_id = @recipe_id";
+                        cmd = new MySqlCommand(sql_del, conn);
+                        cmd.Parameters.AddWithValue("@recipe_id", recipeCoder);
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("ลบข้อมูลสูตรแล้ว", "สถานะการบันทึก");
+                    }
+                    else
+                    {
+                        MessageBox.Show("ไม่สามารถลบสูตรการผลิตนี้ได้เนื่องจากมีผลิตภัณฑ์ที่ใช้สูตรนี้อยู่"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                    
                 }
                 else
                 {
                     MessageBox.Show("กรุณาเลือกรหัสสูตรก่อน", "สถานะการบันทึก");
-
                 }
             }
             catch (Exception e)
@@ -390,19 +322,7 @@ namespace Factory_Manager
 
         }
 
-        private void recipeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if ((review == 0 && recipeCount != 0) && del == 0)
-            {
-                ReviewRecipeData(this.recipeList.SelectedValue.ToString());
-            }
-            else
-            {
-                del = 0;
-                review = 0;
-            }
 
-        }
 
         private void recBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -423,21 +343,22 @@ namespace Factory_Manager
 
         private void addBtn_Click(object sender, RoutedEventArgs e)
         {
-            ReceiveMaterial(this.materialList.SelectedValue.ToString(), this.materialAmount.Text);
+            if (this.materialList.SelectedValue != null && string.IsNullOrEmpty(this.materialAmount.Text) == false && 
+               string.IsNullOrWhiteSpace(this.materialAmount.Text) == false)
+            {
+                ReceiveMaterial(this.materialList.SelectedValue.ToString(), this.materialAmount.Text);
+            }
+            else
+            {
+                MessageBox.Show("กรุณาเลือกวัตถุดิบและใส่ปริมาณก่อน"
+                                   , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            
         }
 
         private void materialList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!(add > 0))
-            {
-                InsertMaterial(this.materialList.SelectedValue.ToString());
-            }
-            else
-            {
-                add = 0;
-                matCount = 0;
-            }
-
+            InsertMaterial(this.materialList.SelectedValue.ToString());
         }
 
         private void materialAmount_TextChanged(object sender, TextChangedEventArgs e)
@@ -447,9 +368,77 @@ namespace Factory_Manager
 
         private void DelRecBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("ต้องการจะลบข้อมูลสูตรรหัส " + this.recipeList.SelectedValue.ToString() + " หรือไม่?", "Factory Manager 2015: ลบข้อมูลสูตรการผลิต", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (string.IsNullOrWhiteSpace(recipeCoder) == false || string.IsNullOrEmpty(recipeCoder) == false)
             {
-                DeleteRecipe();
+                if (MessageBox.Show("ต้องการจะลบข้อมูลสูตรรหัส " + recipeCoder + " หรือไม่?", "Factory Manager 2015: ลบข้อมูลสูตรการผลิต", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    DeleteRecipe();
+                }
+            }
+            else
+            {
+                MessageBox.Show("กรุณเลือกรหัสสูตรก่อน"
+                                   , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            
+        }
+
+        private void setUpdateData()
+        {
+            if (Application.Current.Properties["exportRecipe"] != null)
+            {
+                String code = (String)Application.Current.Properties["exportRecipe"];
+                recipeCoder = code;
+                ReviewRecipeData(code);
+                Application.Current.Properties["exportRecipe"] = null;
+            }
+        }
+
+        private void searchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(this.recipeCode.Text) == false || string.IsNullOrWhiteSpace(this.recipeCode.Text) == false)
+                {
+                    CheckStateDB();
+                    String sqlGetRecipe = "SELECT recipe_name, detail, recipe_id FROM recipe WHERE recipe_id REGEXP @id";
+                    cmd = new MySqlCommand(sqlGetRecipe, conn);
+                    cmd.Parameters.AddWithValue("@id", this.recipeCode.Text);
+                    reader = cmd.ExecuteReader();
+                    RecipeList ses = new RecipeList();
+                    if (reader.HasRows == true)
+                    {
+                        while (reader.Read())
+                        {
+                            ses.recipeLst.Items.Add(new
+                            {
+                                Col1 = reader.GetString("recipe_id"),
+                                Col2 = reader.GetString("recipe_name"),
+                                Col3 = reader.GetString("detail")
+                            });
+                        }
+                        reader.Close();
+                        ses.Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        reader.Close();
+                        MessageBox.Show("ไม่มีข้อมูลสูตรการผลิตบันทึกไว้"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }                  
+                }
+                else
+                {
+                    MessageBox.Show("กรุณาใส่คำค้นหา"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogCreate(ex);
+                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

@@ -26,15 +26,17 @@ namespace Factory_Manager
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd;
         MySqlDataReader reader;
-        Boolean recPass1 = false, recPass2 = false/*, recPass3 = false*/, recPass4 = false, recPass5 = false;
+        Boolean recPass1 = false, recPass2 = false, terminater = false;
         String[] currentNumber = new String[4];
         public CommandEdit()
         {
             InitializeComponent();
-            RetreiveCommandList();
+
             this.finishDate.DisplayDateStart = DateTime.Now;
             RetreiveCustomer();
             RetreiveProduct();
+            SetUpdateData();
+
         }
 
         private void CheckStateDB()
@@ -46,37 +48,6 @@ namespace Factory_Manager
             }
         }
 
-        private void RetreiveCommandList()
-        {
-            ///Get command all list
-            try
-            {
-                CheckStateDB();
-                String getList = "SELECT rowid, year FROM command_card";
-                cmd = new MySqlCommand(getList, conn);
-                reader = cmd.ExecuteReader();
-                if (reader.HasRows == true)
-                {
-                    while (reader.Read())
-                    {
-                        String comd = reader.GetString("year") + "-" + reader.GetString("rowid").PadLeft(4, '0');
-                        this.commandList.Items.Add(comd);
-                    }
-                }
-                else
-                { 
-                    LockScreen("lock");
-                }
-                reader.Close();
-                SucceedLogCreate("retreive command card list");
-
-            }
-            catch (Exception e)
-            {
-                ErrorLogCreate(e);
-            }
-
-        }
 
         public void RetreiveCustomer()
         {
@@ -150,6 +121,51 @@ namespace Factory_Manager
             }
         }
 
+        private void SetUpdateData()
+        {
+
+            if (Application.Current.Properties["cardExportData"] != null)
+            {
+
+                List<Object> data = (List<Object>)Application.Current.Properties["cardExportData"];
+                String orderNumber = data[0].ToString(),
+                    printCode = data[1].ToString(),
+                    blowCode = data[2].ToString(),
+                    cutCode = data[3].ToString(),
+                    matCoder = data[4].ToString(),
+                    customerId = data[5].ToString(),
+                    productId = data[6].ToString(),
+                    customer = data[7].ToString(),
+                    product = data[8].ToString(),
+                    receiveNumber = data[10].ToString(),
+                    requiredAmount = data[11].ToString(),
+                    produceAmount = data[12].ToString(),
+                    printDetail = data[13].ToString(),
+                    codeDetail = data[14].ToString(),
+                    blowDetail = data[15].ToString();
+
+                String finish = (String)data[9];
+                String[] finishDate1 = finish.Split('/');
+                this.finishDate.SelectedDate = new DateTime(int.Parse(finishDate1[2]), int.Parse(finishDate1[1]), int.Parse(finishDate1[0]));
+                this.orderNumber.Text = orderNumber;
+                this.printingCode.Text = printCode;
+                this.blowingCode.Text = blowCode;
+                this.cuttingCode.Text = cutCode;
+                this.matCode.Text = matCoder;
+                this.customerList.SelectedIndex = this.customerList.Items.IndexOf(customerId);
+                this.productList.SelectedIndex = this.productList.Items.IndexOf(productId);
+                this.paperNumber.Text = receiveNumber;
+                this.paperReqAmount.Text = requiredAmount;
+                this.paperRealAmount.Text = produceAmount;
+                this.printingPaperDetail.Text = printDetail;
+                this.blowingPaperDetail.Text = blowDetail;
+                this.cuttingPaperDetail.Text = codeDetail;
+                this.deleteBtn.IsEnabled = true;
+                this.recBtn.IsEnabled = true;
+                Application.Current.Properties["cardExportData"] = null;
+            }
+        }
+
         private void DeleteCommand()
         {
             try
@@ -157,19 +173,14 @@ namespace Factory_Manager
                 ///use this to delete card
                 CheckStateDB();
                 String delete = "DELETE FROM command_card WHERE year=@year AND rowid=@id";
-                String[] cardCode = this.commandList.SelectedValue.ToString().Split('-');
+                String[] cardCode = this.orderNumber.Text.Split('-');
                 cmd = new MySqlCommand(delete, conn);
                 cmd.Parameters.AddWithValue("@year", cardCode[0]);
                 cmd.Parameters.AddWithValue("@id", int.Parse(cardCode[1]));
                 cmd.ExecuteNonQuery();
                 recPass1 = true;
                 recPass2 = true;
-                //recPass3 = true;
-                recPass4 = true;
-                recPass5 = true;
-
                 LockScreen("clear");
-                RetreiveCommandList();
                 RetreiveCustomer();
                 RetreiveProduct();
                 SucceedLogCreate("delete command card");
@@ -254,6 +265,7 @@ namespace Factory_Manager
                     this.productName.Text = reader.GetString("product_name");
                 }
                 reader.Close();
+
             }
             catch (Exception e)
             {
@@ -282,8 +294,7 @@ namespace Factory_Manager
                 reader = cmd.ExecuteReader();
                 recPass1 = true;
                 recPass2 = true;
-                //recPass3 = true;
-                recPass4 = true;
+
                 while (reader.Read())
                 {
                     this.paperNumber.Text = reader.GetString("receiveNumber");
@@ -305,6 +316,7 @@ namespace Factory_Manager
                     this.cuttingPaperDetail.Text = detail[2];
                 }
                 reader.Close();
+
                 GetCustomerName(cusId);
                 GetProductName(prodId);
             }
@@ -347,14 +359,11 @@ namespace Factory_Manager
                 String[] prefix = { "PR", "BL", "CU", "RW" };
                 CultureInfo ci = new CultureInfo("en-US");
                 String currentYear = DateTime.Now.ToString("yy", ci);
-                String getNum = "SELECT COUNT(*) FROM command_card";
-                cmd = new MySqlCommand(getNum, conn);
-                reader = cmd.ExecuteReader();
-                reader.Read();
-                number = reader.GetInt32(0);
+
+                number = int.Parse(getLatestRow());
                 for (int i = 0; i < 4; i++)
                 {
-                    code[i] = prefix[i] + currentYear + "-" + (number + 1).ToString().PadLeft(4, '0');
+                    code[i] = prefix[i] + currentYear + "-" + (number + 1).ToString().PadLeft(5, '0');
                 }
                 reader.Close();
             }
@@ -376,18 +385,26 @@ namespace Factory_Manager
             try
             {
                 CheckStateDB();
-                String sql_count = "SELECT COUNT(*) FROM command_card";
+                String sql_count = "SELECT rowid FROM command_card ORDER BY rowid DESC LIMIT 1";
                 cmd = new MySqlCommand(sql_count, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
-                reader.Read();
-                rowCount = reader.GetInt64(0).ToString();
+                reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    reader.Read();
+                    rowCount = reader.GetString("rowid");
+                }
+                else
+                {
+                    rowCount = "0";
+                }
                 reader.Close();
+                SucceedLogCreate("retreive last row");
             }
             catch (Exception e)
             {
-                ErrorLogCreate(e);
                 MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
                     , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ErrorLogCreate(e);
             }
             return rowCount;
 
@@ -399,7 +416,7 @@ namespace Factory_Manager
             String cardCode = this.printingCode.Text + "," + this.blowingCode.Text + "," + this.cuttingCode.Text + "," + this.matCode.Text;
             String customerId = this.customerList.SelectedValue.ToString();
             String productId = this.productList.SelectedValue.ToString();
-            String[] runNumber = this.commandList.SelectedValue.ToString().Split('-');
+            String[] runNumber = this.orderNumber.Text.Split('-');
             String receiveCode = this.paperNumber.Text;
             String produceAmount = this.paperReqAmount.Text;
             String realAmount = this.paperRealAmount.Text;
@@ -419,11 +436,13 @@ namespace Factory_Manager
                 {
                     if (create == false)
                     {
+
                         ///Update all command data
                         CheckStateDB();
+                        String user = (String)Application.Current.Properties["user"];
                         String getData = "UPDATE command_card SET customerId=@customerId, productId=@productId, receiveNumber=@receiveNumber," +
-                                         "finishDate=@finishDate, produceAmount=@produceAmount, requiredAmount=@requiredAmount, cardDetail=@cardDetail " +
-                                         "WHERE year=@year AND rowid=@rowid";
+                                         "finishDate=@finishDate, produceAmount=@produceAmount, requiredAmount=@requiredAmount, cardDetail=@cardDetail, " +
+                                         "editUser = @edit WHERE year=@year AND rowid=@rowid";
                         cmd = new MySqlCommand(getData, conn);
                         cmd.Parameters.AddWithValue("@cardCode", EncoderUTF(cardCode));
                         cmd.Parameters.AddWithValue("@customerId", EncoderUTF(customerCode));
@@ -433,14 +452,16 @@ namespace Factory_Manager
                         cmd.Parameters.AddWithValue("@produceAmount", realAmount);
                         cmd.Parameters.AddWithValue("@requiredAmount", produceAmount);
                         cmd.Parameters.AddWithValue("@cardDetail", EncoderUTF(paperDetail));
+                        cmd.Parameters.AddWithValue("@edit", user);
                         cmd.Parameters.AddWithValue("@year", runNumber[0]);
                         cmd.Parameters.AddWithValue("@rowid", runNumber[1]);
                         cmd.ExecuteNonQuery();
                         MessageBox.Show("บันทึกข้อมูลใบคำสั่งแล้ว", "สถานะการบันทึก");
-                       
+
                     }
                     else
                     {
+                        String user = (String)Application.Current.Properties["user"];
                         currentNumber = CountCardOn();
                         String cardNewCode = currentNumber[0] + "," + currentNumber[1] + "," + currentNumber[2] + "," + currentNumber[3];
                         String currentYear = DateTime.Now.ToString("yy", ci);
@@ -449,9 +470,9 @@ namespace Factory_Manager
                         CheckStateDB();
                         String sql_rec = "INSERT INTO command_card (rowid, cardCode, customerId, " +
                                     "productId, year, receiveNumber, recordDate, finishDate, produceAmount," +
-                                    "requiredAmount, cardDetail) VALUES(@rowid, @cardCode," +
+                                    "requiredAmount, cardDetail, createUser, editUser) VALUES(@rowid, @cardCode," +
                                     "@customerId, @productId, @year, @receiveNumber, @recordDate, " +
-                                    "@finishDate, @produceAmount, @requiredAmount, @cardDetail)";
+                                    "@finishDate, @produceAmount, @requiredAmount, @cardDetail, @create, @edit)";
                         cmd = new MySqlCommand(sql_rec, conn);
                         cmd.Parameters.AddWithValue("@rowid", nextRow);
                         cmd.Parameters.AddWithValue("@cardCode", EncoderUTF(cardNewCode));
@@ -464,15 +485,13 @@ namespace Factory_Manager
                         cmd.Parameters.AddWithValue("@produceAmount", produceAmount);
                         cmd.Parameters.AddWithValue("@requiredAmount", realAmount);
                         cmd.Parameters.AddWithValue("@cardDetail", EncoderUTF(paperDetail));
+                        cmd.Parameters.AddWithValue("@create", user);
+                        cmd.Parameters.AddWithValue("@edit", "-");
                         cmd.ExecuteNonQuery();
                         MessageBox.Show("สร้างข้อมูลใบคำสั่งแล้ว", "สถานะการบันทึก");
                         recPass1 = true;
                         recPass2 = true;
-                        //recPass3 = true;
-                        recPass4 = true;
-                        recPass5 = true;
                         LockScreen("clear");
-                        RetreiveCommandList();
                         RetreiveCustomer();
                         RetreiveProduct();
 
@@ -481,13 +500,15 @@ namespace Factory_Manager
                 }
                 else
                 {
-                    throw new Exception("Form is not complete!");
+                    MessageBox.Show("กรอกข้อมูลไม่ครบถ้วน"
+                                     , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             catch (Exception xx)
             {
                 ErrorLogCreate(xx);
-                MessageBox.Show("ใส่ข้อมูลที่จำเป็นไม่ครบหรือไม่ถูกต้อง", "สถานะการบันทึก");
+                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
 
@@ -498,8 +519,7 @@ namespace Factory_Manager
             ///clear screen or lock screen
             if (action == "clear")
             {
-                this.commandList.Items.Clear();
-                this.commandList.IsEnabled = true;
+                this.orderNumber.Clear();
                 this.paperNumber.Clear();
                 this.paperNumber.IsEnabled = true;
                 this.paperRealAmount.Clear();
@@ -545,8 +565,7 @@ namespace Factory_Manager
                 this.cuttingCode.IsEnabled = false;
                 this.matCode.Clear();
                 this.matCode.IsEnabled = false;
-                this.commandList.Items.Clear();
-                this.commandList.IsEnabled = false;
+                this.orderNumber.Clear();
                 this.paperNumber.Clear();
                 this.paperNumber.IsEnabled = false;
                 this.paperRealAmount.Clear();
@@ -595,6 +614,7 @@ namespace Factory_Manager
         {
             if (recPass1 == false)
             {
+
                 GetCustomerName(this.customerList.SelectedValue.ToString());
             }
             else
@@ -615,22 +635,10 @@ namespace Factory_Manager
             }
         }
 
-        private void commandList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (recPass4 == false)
-            {
-                GetCommandData(this.commandList.SelectedValue.ToString());
-            }
-            else
-            {
-                recPass4 = false;
-            }
-
-        }
 
         private void deleteBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("ต้องการจะลบข้อมูลใบคำสั่งรหัส " + this.commandList.SelectedValue.ToString() + " หรือไม่?", "Factory Manager 2015: ลบข้อมูลลูกค้า", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (MessageBox.Show("ต้องการจะลบข้อมูลใบคำสั่งรหัส " + this.orderNumber.Text + " หรือไม่?", "Factory Manager 2015: ลบข้อมูลลูกค้า", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 DeleteCommand();
 
@@ -638,15 +646,157 @@ namespace Factory_Manager
 
         }
 
-        private void commandList_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        private String ResolveProductName(String code)
         {
-            if (recPass5 == false)
+            String name = "";
+            try
             {
-                GetCommandData(this.commandList.SelectedValue.ToString());
+                CheckStateDB();
+                String sql_name2 = "SELECT product_name FROM product WHERE product_id = @prodId";
+                cmd = new MySqlCommand(sql_name2, conn);
+                cmd.Parameters.AddWithValue("@prodId", code);
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                name = reader.GetString("product_name");
+                reader.Close();
+                SucceedLogCreate("cardList : resolve product name");
             }
-            recPass5 = false;
-
+            catch (Exception e)
+            {
+                ErrorLogCreate(e);
+                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            return name;
         }
+
+        private String ResolveCustomerName(String code)
+        {
+            String name = "None";
+            try
+            {
+                CheckStateDB();
+                String sql_name = "SELECT customer_name FROM customer WHERE customer_id = @id";
+                cmd = new MySqlCommand(sql_name, conn);
+                cmd.Parameters.AddWithValue("@id", code);
+                MySqlDataReader reader = cmd.ExecuteReader();
+                reader.Read();
+                name = reader.GetString("customer_name");
+                reader.Close();
+                SucceedLogCreate("cardList : resolve customer name");
+            }
+            catch (Exception e)
+            {
+                ErrorLogCreate(e);
+                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            return name;
+        }
+
+        private void searchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                CheckStateDB();
+                if (string.IsNullOrEmpty(this.searchQuery.Text) || string.IsNullOrWhiteSpace(this.searchQuery.Text) == false)
+                {
+                    if (this.searchQuery.Text.Contains('-'))
+                    {
+                        String[] order = this.searchQuery.Text.Split('-');
+                        String sql_data = "SELECT rowid, customerId, finishDate, recordDate, productId, year, receiveNumber FROM command_card WHERE rowid REGEXP @id AND year REGEXP @year";
+                        cmd = new MySqlCommand(sql_data, conn);
+                        cmd.Parameters.AddWithValue("@id", order[1].TrimStart('0'));
+                        cmd.Parameters.AddWithValue("@year", order[0]);
+                        reader = cmd.ExecuteReader();
+                        CommandList ses = new CommandList();
+                        if (reader.HasRows == false)
+                        {
+                            MessageBox.Show("ไม่พบข้อมูล Job ที่ค้นหา", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            terminater = true;
+                        }
+                        List<String> orderNumber = new List<String>();
+                        List<String> receiveNumber = new List<String>();
+                        List<String> recordDate = new List<String>();
+                        List<String> finishDate = new List<String>();
+                        List<String> customerId = new List<String>();
+                        List<String> productId = new List<String>();
+                        while (reader.Read())
+                        {
+                            orderNumber.Add(reader.GetString("year") + "-" + reader.GetString("rowid").PadLeft(4, '0'));
+                            receiveNumber.Add(reader.GetString("receiveNumber"));
+                            recordDate.Add(reader.GetString("recordDate"));
+                            finishDate.Add(reader.GetString("finishDate"));
+                            customerId.Add(reader.GetString("customerId"));
+                            productId.Add(reader.GetString("productId"));
+                        }
+                        reader.Close();
+                        for (int i = 0; i < orderNumber.Count(); i++)
+                        {
+                            ses.commandLst.Items.Add(new
+                            {
+                                Col1 = orderNumber[i],
+                                Col2 = receiveNumber[i],
+                                Col3 = recordDate[i],
+                                Col4 = finishDate[i],
+                                Col5 = ResolveCustomerName(customerId[i]),
+                                Col6 = ResolveProductName(productId[i])
+                            });
+                        }
+                        if (terminater == false)
+                        {
+                            this.Close();
+                            ses.Show();
+
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("ไม่พบข้อมูล Job ที่ค้นหา", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("กรุณากรอกลำดับสั่งในช่องค้นหา", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogCreate(ex);
+                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
+                                    , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void paperReqAmount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int test;
+            if (string.IsNullOrEmpty(this.paperReqAmount.Text) == false || string.IsNullOrWhiteSpace(this.paperReqAmount.Text) == false)
+            {
+                if (int.TryParse(this.paperReqAmount.Text, out test) == false)
+                {
+                    MessageBox.Show("กรุณาใส่ข้อมูลที่เป็นตัวเลข", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    this.paperReqAmount.Clear();
+                }
+            }   
+        }
+
+        private void paperRealAmount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int test;
+            if (string.IsNullOrEmpty(this.paperReqAmount.Text) == false || string.IsNullOrWhiteSpace(this.paperReqAmount.Text) == false)
+            {
+                if (int.TryParse(this.paperRealAmount.Text, out test) == false)
+                {
+                    MessageBox.Show("กรุณาใส่ข้อมูลที่เป็นตัวเลข", "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    this.paperRealAmount.Clear();
+                }
+            }
+            
+        }
+
+
 
     }
 }

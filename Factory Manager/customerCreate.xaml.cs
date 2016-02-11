@@ -134,9 +134,9 @@ namespace Factory_Manager
                 CheckStateDB();
                 String sqlCreate = "INSERT INTO customer (customer_id, customer_name, detail) VALUES(@id, @name, @detail)";
                 cmd = new MySqlCommand(sqlCreate, conn);
-                cmd.Parameters.AddWithValue("@id", id);
-                cmd.Parameters.AddWithValue("@name", name);
-                cmd.Parameters.AddWithValue("@detail", detail);
+                cmd.Parameters.AddWithValue("@id", EncoderUTF(id));
+                cmd.Parameters.AddWithValue("@name", EncoderUTF(name));
+                cmd.Parameters.AddWithValue("@detail", EncoderUTF(detail));
                 cmd.ExecuteNonQuery();
                 SucceedLogCreate("Recording new customer:customerCreate");
                 MessageBox.Show("บันทึกข้อมูลลูกค้าสำเร็จแล้ว"
@@ -171,7 +171,7 @@ namespace Factory_Manager
                         CheckStateDB();
                         String searchByCustomerId = "SELECT customer_name, customer_id FROM customer WHERE customer_id REGEXP @id";
                         cmd = new MySqlCommand(searchByCustomerId, conn);
-                        cmd.Parameters.AddWithValue("@id", cusId);
+                        cmd.Parameters.AddWithValue("@id", EncoderUTF(cusId));
                         reader = cmd.ExecuteReader();
                         if (reader.HasRows == false)
                         {
@@ -199,7 +199,7 @@ namespace Factory_Manager
                         CheckStateDB();
                         String searchByCustomerName = "SELECT customer_name, customer_id FROM customer WHERE customer_name REGEXP @words";
                         cmd = new MySqlCommand(searchByCustomerName, conn);
-                        cmd.Parameters.AddWithValue("@words", cusName);
+                        cmd.Parameters.AddWithValue("@words", EncoderUTF(cusName));
                         reader = cmd.ExecuteReader();
                         if (reader.HasRows == false)
                         {
@@ -248,7 +248,7 @@ namespace Factory_Manager
                             String searchByCustomerId = "SELECT customer_id, customer_name FROM customer WHERE customer_id = @cusId";
                             CheckStateDB();
                             cmd = new MySqlCommand(searchByCustomerId, conn);
-                            cmd.Parameters.AddWithValue("@cusId", customerId);
+                            cmd.Parameters.AddWithValue("@cusId", EncoderUTF(customerId));
                             reader = cmd.ExecuteReader();
                             while (reader.Read())
                             {
@@ -378,7 +378,7 @@ namespace Factory_Manager
 
         private void searchBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (this.typeSearch.SelectedIndex >= 0)
+            if (this.typeSearch.SelectedValue != null)
             {
                 this.customerResult.IsEnabled = true;
                 searchCustomer();
@@ -393,12 +393,13 @@ namespace Factory_Manager
 
         private void recordBtn_Click(object sender, RoutedEventArgs e)
         {
+           
             if (ValidateInputAction("record", this.typeSearch.SelectedIndex) == true)
             {
                 String id = this.idCustomer.Text;
                 String name = this.customerName.Text;
                 String detail = "-";
-                if (string.IsNullOrEmpty(this.customerDetail.Text) || string.IsNullOrWhiteSpace(this.customerDetail.Text) == true)
+                if (string.IsNullOrEmpty(this.customerDetail.Text) == false || string.IsNullOrWhiteSpace(this.customerDetail.Text) == false)
                 {
                     detail = this.customerDetail.Text;
                 }
@@ -499,16 +500,37 @@ namespace Factory_Manager
         {
             try
             {
+                Boolean recordFound = false;
                 CheckStateDB();
-                String sqlDeleteCustomer = "DELETE FROM customer WHERE customer_id = @id";
-                cmd = new MySqlCommand(sqlDeleteCustomer, conn);
-                cmd.Parameters.AddWithValue("@id", customerIdNumber);
-                cmd.ExecuteNonQuery();
-                ClearAllBox();
-                this.idCustomer.IsEnabled = true;
-                MessageBox.Show("ลบลูกค้าสำเร็จแล้ว"
-                , "สถานะการบันทึก", MessageBoxButton.OK, MessageBoxImage.Information);
-                SucceedLogCreate("Delete customer: customerCreate");
+                String sqlCheckCommand = "SELECT customerId FROM command_card WHERE customerId = @cusId";
+                cmd = new MySqlCommand(sqlCheckCommand, conn);
+                cmd.Parameters.AddWithValue("@cusId", customerIdNumber);
+                reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    recordFound = true;
+                }
+
+                reader.Close();
+
+                if (recordFound == false)
+                {
+                    String sqlDeleteCustomer = "DELETE FROM customer WHERE customer_id = @id";
+                    cmd = new MySqlCommand(sqlDeleteCustomer, conn);
+                    cmd.Parameters.AddWithValue("@id", customerIdNumber);
+                    cmd.ExecuteNonQuery();
+                    ClearAllBox();
+                    this.idCustomer.IsEnabled = true;
+                    MessageBox.Show("ลบลูกค้าสำเร็จแล้ว"
+                    , "สถานะการบันทึก", MessageBoxButton.OK, MessageBoxImage.Information);
+                    SucceedLogCreate("Delete customer: customerCreate");         
+                }
+                else
+                {
+                    MessageBox.Show("ไม่สามารถลบลูกค้าคนนี้ได้เนื่องจาก มีข้อมูลลูกค้ารายนี้บันทึกในใบคำสั่ง"
+                , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                
 
             }
             catch (Exception ex)

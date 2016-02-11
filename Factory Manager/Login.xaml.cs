@@ -98,6 +98,8 @@ namespace Factory_Manager
                     loginFlag = true;
                     Application.Current.Properties["role"] = dataComing[1];
                     Application.Current.Properties["iduser"] = dataComing[2];
+
+                    MessageBox.Show(this.username.Text);
                     Mainprogram sesy = new Mainprogram();
                     sesy.Show();
                     this.Close();

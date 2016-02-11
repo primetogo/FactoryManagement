@@ -42,13 +42,14 @@ namespace Factory_Manager
 
         }
 
+
+
         private void recordingMaterial(String materialCode, String materialType)
         {
             ///function for recording material data
             try
             {
-                conn.ConnectionString = (String)Application.Current.Properties["sqlCon"];
-                conn.Open();
+                CheckStateDB();
                 String recordMat = "INSERT INTO materiallist (materialcode, materialname) VALUES(@code, @type)";
                 cmd = new MySqlCommand(recordMat, conn);
                 cmd.Parameters.AddWithValue("@code", materialCode);
@@ -57,7 +58,6 @@ namespace Factory_Manager
             }
             catch (Exception e)
             {
-                conn.Close();
                 ErrorLogCreate(e);
             }
         }
@@ -174,8 +174,10 @@ namespace Factory_Manager
                 selectedMaterialCoder = selectedItem.materialC;
                 selectedMaterialName = selectedItem.materialN;
             }
+            
             this.materialCode.Text = selectedMaterialCoder;
             this.materialType.Text = selectedMaterialName;
+            
         }
 
         private void recordBtn_Click(object sender, RoutedEventArgs e)
@@ -195,8 +197,8 @@ namespace Factory_Manager
                     {
                         String sqlInsertMaterial = "INSERT INTO materiallist (materialcode, materialname) VALUES(@code, @name)";
                         cmd = new MySqlCommand(sqlInsertMaterial, conn);
-                        cmd.Parameters.AddWithValue("@code", this.materialCode.Text);
-                        cmd.Parameters.AddWithValue("@name", this.materialType.Text);
+                        cmd.Parameters.AddWithValue("@code", EncoderUTF(this.materialCode.Text));
+                        cmd.Parameters.AddWithValue("@name", EncoderUTF(this.materialType.Text));
                         cmd.ExecuteNonQuery();
 
                         MessageBox.Show("บันทึกข้อมูลวัตถุดิบสำเร็จแล้ว"
@@ -210,8 +212,8 @@ namespace Factory_Manager
                 {
                     String sqlInsertMaterial = "INSERT INTO materiallist (materialcode, materialname) VALUES(@code, @name)";
                     cmd = new MySqlCommand(sqlInsertMaterial, conn);
-                    cmd.Parameters.AddWithValue("@code", this.materialCode.Text);
-                    cmd.Parameters.AddWithValue("@name", this.materialType.Text);
+                    cmd.Parameters.AddWithValue("@code", EncoderUTF(this.materialCode.Text));
+                    cmd.Parameters.AddWithValue("@name", EncoderUTF(this.materialType.Text));
                     cmd.ExecuteNonQuery();
                     this.materialCode.Clear();
                     this.materialType.Clear();
@@ -235,10 +237,10 @@ namespace Factory_Manager
                     String sqlUpdateMaterial = "UPDATE materiallist SET materialcode = @code, materialname = @name " +
                    "WHERE materialcode = @origincode AND materialname = @originname";
                     cmd = new MySqlCommand(sqlUpdateMaterial, conn);
-                    cmd.Parameters.AddWithValue("@code", this.materialCode.Text);
-                    cmd.Parameters.AddWithValue("@name", this.materialType.Text);
-                    cmd.Parameters.AddWithValue("@origincode", selectedMaterialCoder);
-                    cmd.Parameters.AddWithValue("@originname", selectedMaterialName);
+                    cmd.Parameters.AddWithValue("@code", EncoderUTF(this.materialCode.Text));
+                    cmd.Parameters.AddWithValue("@name", EncoderUTF(this.materialType.Text));
+                    cmd.Parameters.AddWithValue("@origincode", EncoderUTF(selectedMaterialCoder));
+                    cmd.Parameters.AddWithValue("@originname", EncoderUTF(selectedMaterialName));
                     cmd.ExecuteNonQuery();
                     SucceedLogCreate("Update material data:materialCreate");
                     this.materialResult.Items.Clear();
@@ -278,7 +280,7 @@ namespace Factory_Manager
                     String recipeID = this.searchQuery.Text;
                     String searchingRecipeId = "SELECT materialCode FROM recipe WHERE recipe_id REGEXP @id";
                     cmd = new MySqlCommand(searchingRecipeId, conn);
-                    cmd.Parameters.AddWithValue("@id", recipeID);
+                    cmd.Parameters.AddWithValue("@id", EncoderUTF(recipeID));
                     reader = cmd.ExecuteReader();
                     String materialDetail = "";
                     List<String> materialCodeList = new List<String>(), materialNameList = new List<String>();
@@ -317,7 +319,7 @@ namespace Factory_Manager
                     String recipeName = searchQuery.Text;
                     String searchByRecipeName = "SELECT materialCode FROM recipe WHERE recipe_name REGEXP @name";
                     cmd = new MySqlCommand(searchByRecipeName, conn);
-                    cmd.Parameters.AddWithValue("@name", recipeName);
+                    cmd.Parameters.AddWithValue("@name", EncoderUTF(recipeName));
                     reader = cmd.ExecuteReader();
                     String materialDetail = "";
                     List<String> materialCodeList = new List<String>(), materialNameList = new List<String>();
@@ -375,7 +377,7 @@ namespace Factory_Manager
                             CheckStateDB();
                             String sqlGetRecipe = "SELECT recipe_id FROM product WHERE product_id = @id";
                             cmd = new MySqlCommand(sqlGetRecipe, conn);
-                            cmd.Parameters.AddWithValue("@id", productId);
+                            cmd.Parameters.AddWithValue("@id", EncoderUTF(productId));
                             reader = cmd.ExecuteReader();
                             while (reader.Read())
                             {
@@ -385,7 +387,7 @@ namespace Factory_Manager
                             CheckStateDB();
                             String sqlGetMaterial = "SELECT materialCode FROM recipe WHERE recipe_id = @id";
                             cmd = new MySqlCommand(sqlGetMaterial, conn);
-                            cmd.Parameters.AddWithValue("@id", recipeId);
+                            cmd.Parameters.AddWithValue("@id", EncoderUTF(recipeId));
                             reader = cmd.ExecuteReader();
                             while (reader.Read())
                             {
@@ -427,7 +429,7 @@ namespace Factory_Manager
                     CheckStateDB();
                     String sqlGetMaterialName = "SELECT materialcode, materialname FROM materiallist WHERE materialcode REGEXP @code";
                     cmd = new MySqlCommand(sqlGetMaterialName, conn);
-                    cmd.Parameters.AddWithValue("@code", materialCode);
+                    cmd.Parameters.AddWithValue("@code", EncoderUTF(materialCode));
                     reader = cmd.ExecuteReader();
                     if (reader.HasRows == true)
                     {
@@ -458,7 +460,7 @@ namespace Factory_Manager
                     CheckStateDB();
                     String sqlGetMaterialName = "SELECT materialcode, materialname FROM materiallist WHERE materialname REGEXP @code";
                     cmd = new MySqlCommand(sqlGetMaterialName, conn);
-                    cmd.Parameters.AddWithValue("@code", materialCode);
+                    cmd.Parameters.AddWithValue("@code", EncoderUTF(materialCode));
                     reader = cmd.ExecuteReader();
                     if (reader.HasRows == true)
                     {
@@ -490,7 +492,7 @@ namespace Factory_Manager
                     String sqlGetproduct = "SELECT productId FROM command_card WHERE cardCode REGEXP @order";
                     String productId = "", recipeId = "", materialCode = "";
                     cmd = new MySqlCommand(sqlGetproduct, conn);
-                    cmd.Parameters.AddWithValue("@order", order);
+                    cmd.Parameters.AddWithValue("@order", EncoderUTF(order));
                     reader = cmd.ExecuteReader();
                     if (reader.HasRows == true)
                     {
@@ -502,7 +504,7 @@ namespace Factory_Manager
                         CheckStateDB();
                         String sqlGetRecipe = "SELECT recipe_id FROM product WHERE product_id = @id";
                         cmd = new MySqlCommand(sqlGetRecipe, conn);
-                        cmd.Parameters.AddWithValue("@id", productId);
+                        cmd.Parameters.AddWithValue("@id", EncoderUTF(productId));
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
@@ -512,7 +514,7 @@ namespace Factory_Manager
                         CheckStateDB();
                         String sqlGetMaterial = "SELECT materialCode FROM recipe WHERE recipe_id = @id";
                         cmd = new MySqlCommand(sqlGetMaterial, conn);
-                        cmd.Parameters.AddWithValue("@id", recipeId);
+                        cmd.Parameters.AddWithValue("@id", EncoderUTF(recipeId));
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
@@ -580,20 +582,62 @@ namespace Factory_Manager
         {
             try
             {
+                Boolean recordFound = false;
+                List<String> rawMaterialCode = new List<String>();
                 CheckStateDB();
-                String sqlDeleteMaterial = "DELETE FROM materiallist WHERE materialcode = @code AND materialname = @name";
-                cmd = new MySqlCommand(sqlDeleteMaterial, conn);
-                cmd.Parameters.AddWithValue("@code", selectedMaterialCoder);
-                cmd.Parameters.AddWithValue("@name", selectedMaterialName);
-                cmd.ExecuteNonQuery();
-                this.materialCode.Clear();
-                this.materialType.Clear();
-                this.materialResult.Items.Clear();
-                this.updateBtn.IsEnabled = false;
-                this.deleteBtn.IsEnabled = false;
-                SucceedLogCreate("Delete material:materialCreate");
-                MessageBox.Show("ลบข้อมูลวัตถุดิบสำเร็จแล้ว"
-                   , "สถานะการบันทึก", MessageBoxButton.OK, MessageBoxImage.Information);
+                String sqlGetMat = "SELECT materialCode FROM recipe";
+                cmd = new MySqlCommand(sqlGetMat, conn);
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {                   
+                    rawMaterialCode.Add(reader.GetString("materialCode"));            
+                }
+                reader.Close();
+
+                String resMatName = "SELECT materialCode, materialName FROM materiallist WHERE idmaterial = @id";
+                for (int i = 0; i < rawMaterialCode.Count; i++ )
+                {
+                    String[] recipePart = rawMaterialCode[i].Split(',');
+                    for (int j = 0; j < recipePart.Length; j++)
+                    {
+                        String[] singleMaterial = recipePart[j].Split(':');
+                        cmd = new MySqlCommand(resMatName, conn);
+                        cmd.Parameters.AddWithValue("@id", singleMaterial[0]);
+                        reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            if (selectedMaterialCoder.Equals(reader.GetString("materialCode")) &&
+                                selectedMaterialName.Equals(reader.GetString("materialName")))
+                            {
+                                recordFound = true;
+                            }
+                        }
+                        reader.Close();
+                    }
+                }
+                           
+                if (recordFound == false)
+                {
+                   String sqlDeleteMaterial = "DELETE FROM materiallist WHERE materialcode = @code AND materialname = @name";
+                    cmd = new MySqlCommand(sqlDeleteMaterial, conn);
+                    cmd.Parameters.AddWithValue("@code", EncoderUTF(selectedMaterialCoder));
+                    cmd.Parameters.AddWithValue("@name", EncoderUTF(selectedMaterialName));
+                    cmd.ExecuteNonQuery();
+                    this.materialCode.Clear();
+                    this.materialType.Clear();
+                    this.materialResult.Items.Clear();
+                    this.updateBtn.IsEnabled = false;
+                    this.deleteBtn.IsEnabled = false;
+                    SucceedLogCreate("Delete material:materialCreate");
+                    MessageBox.Show("ลบข้อมูลวัตถุดิบสำเร็จแล้ว"
+                       , "สถานะการบันทึก", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("ไม่สามารถลบวัตถุดิบได้ เนื่องจากมีการใช้วัตถุดิบในสูตรการผลิต"
+                , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                
             }
             catch (Exception ex)
             {

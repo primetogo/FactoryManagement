@@ -7,11 +7,12 @@
         <Label Content="รหัสผ่าน" HorizontalAlignment="Left" Margin="107,114,0,0" VerticalAlignment="Top"/>
         <RadioButton x:Name="admin" Content="Admin" HorizontalAlignment="Left" Margin="160,189,0,0" VerticalAlignment="Top" IsChecked="True"/>
         <RadioButton x:Name="user" Content="User" HorizontalAlignment="Left" Margin="277,189,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="btnrec" Content="บันทึกข้อมูล" HorizontalAlignment="Left" Margin="212,238,0,0" VerticalAlignment="Top" Width="94" Click="btnrec_Click"/>
+        <Button x:Name="btnrec" Content="บันทึกข้อมูล" HorizontalAlignment="Left" Margin="107,240,0,0" VerticalAlignment="Top" Width="94" IsEnabled="False" Click="btnrec_Click"/>
         <TextBox x:Name="username" HorizontalAlignment="Left" Height="23" Margin="176,80,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="185"/>
         <PasswordBox x:Name="password" HorizontalAlignment="Left" Margin="176,122,0,0" VerticalAlignment="Top" Width="185"/>
         <ComboBox x:Name="memberList" HorizontalAlignment="Left" Margin="176,28,0,0" VerticalAlignment="Top" Width="130" SelectionChanged="memberList_SelectionChanged"/>
         <Label Content="รหัสสมาชิก" HorizontalAlignment="Left" Margin="85,25,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="deleteBtn" Content="ลบสมาชิก" HorizontalAlignment="Left" Margin="277,240,0,0" VerticalAlignment="Top" Width="94" Click="deleteBtn_Click" IsEnabled="False"/>
 
     </Grid>
 </Window>

@@ -1,0 +1,19 @@
+﻿<Window x:Class="Factory_Manager.RecipeList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ผลการค้นหาสูตรการผลิต" Height="463.806" Width="785.702" ResizeMode="NoResize" Icon="Fm.ico" 
+        Background="#FFE6E6E6" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <ListView x:Name="recipeLst" HorizontalAlignment="Left" Height="303"  Margin="27,61,0,0" VerticalAlignment="Top" Width="709" FontSize="16">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="รหัสสูตร" Width="150" DisplayMemberBinding="{Binding Col1}"/>
+                    <GridViewColumn Header="ชื่อสูตร" Width="250" DisplayMemberBinding="{Binding Col2}"/>
+                    <GridViewColumn Header="หมายเหตุ" Width="300" DisplayMemberBinding="{Binding Col3}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <TextBlock HorizontalAlignment="Left" Margin="275,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="158" Height="22" FontSize="16" Text="เลือกสูตรที่ต้องการแก้ไข"/>
+        <Button x:Name="selectBtn" Content="เลือกสูตร" HorizontalAlignment="Left" Margin="341,387,0,0" VerticalAlignment="Top" Width="103" FontSize="16" Click="selectBtn_Click" />
+    </Grid>
+</Window>

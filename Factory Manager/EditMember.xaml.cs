@@ -47,6 +47,7 @@ namespace Factory_Manager
             try
             {
                 CheckStateDB();
+                this.memberList.Items.Clear();
                 String member = "SELECT iduser FROM user";
                 cmd = new MySqlCommand(member, conn);
                 reader = cmd.ExecuteReader();
@@ -188,6 +189,8 @@ namespace Factory_Manager
             this.memberList.Items.Clear();
             this.memberList.IsEnabled = true;
             this.user.IsEnabled = true;
+            this.username.Clear();
+            this.password.Clear();
             this.password.IsEnabled = true;
             this.admin.IsEnabled = true;
             this.user.IsEnabled = true;
@@ -195,27 +198,72 @@ namespace Factory_Manager
 
         private void memberList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            String idd = this.memberList.SelectedValue.ToString();
-            if (string.IsNullOrWhiteSpace(idd) == false)
+            try
             {
-                DisplayData(idd);
+                this.deleteBtn.IsEnabled = true;
+                this.btnrec.IsEnabled = true;
+                if (this.memberList.SelectedValue != null)
+                {
+                    String idd = this.memberList.SelectedValue.ToString();
+                    DisplayData(idd);
+
+                }else if(this.memberList.SelectedValue == null){
+                   //does nothing
+                 
+                }
+                else
+                {
+                    MessageBox.Show("กรุณาเลือกรหัสสมาชิก", "ข้อผิดพลาด");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("กรุณาเลือกรหัสสมาชิก","ข้อผิดพลาด");
+                ErrorLogCreate(ex);
             }
         }
+
+
 
         private void btnrec_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(this.memberList.SelectedValue.ToString()) == false)
             {
                 RecordData();
+                MessageBox.Show("บันทึกข้อมูลสมาชิกแล้ว", "สถานะการบันทึก");
             }
             else
             {
                 MessageBox.Show("กรุณาเลือกรหัสสมาชิก", "ข้อผิดพลาด");
             }
+            this.btnrec.IsEnabled = false;
+            this.deleteBtn.IsEnabled = false;
+            ClearScreen();
+            LoadMemberList();
+        }
+
+        private void deleteBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                CheckStateDB();
+                String id = this.memberList.SelectedValue.ToString();
+                String deleteMember = "DELETE FROM user WHERE iduser = @iduser";
+                cmd = new MySqlCommand(deleteMember, conn);
+                cmd.Parameters.AddWithValue("@iduser", id);
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("ลบข้อมูลสมาชิกเรียบร้อยแล้ว", "สถานะการบันทึก");
+       
+            }
+            catch (Exception ex)
+            {
+                ErrorLogCreate(ex);
+                MessageBox.Show("เกิดข้อผิดพลาด ข้อมูล error บันทึกอยู่ในไฟล์ log กรุณาแจ้งข้อมูลดังกล่าวแก่ทีมติดตั้ง"
+                                   , "ข้อผิดพลาด", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            this.deleteBtn.IsEnabled = false;
+            this.btnrec.IsEnabled = false;
+            ClearScreen();
+            LoadMemberList();
         }
     }
 }

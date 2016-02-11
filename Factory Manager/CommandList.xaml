@@ -1,0 +1,21 @@
+﻿<Window x:Class="Factory_Manager.CommandList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Height="449.806" Width="1097.015" ResizeMode="NoResize" Icon="Fm.ico" Title="ผลการค้นหาใบคำสั่ง"
+        Background="#FFE6E6E6" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Margin="488,19,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="158" Height="22" FontSize="16"><Run Text="เลือก Job ที่ต้องการแก้ไข"/></TextBlock>
+        <ListView x:Name="commandLst" HorizontalAlignment="Left" Height="303"  Margin="27,61,0,0" VerticalAlignment="Top" Width="1037" FontSize="16">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ลำดับสั่ง" Width="95" DisplayMemberBinding="{Binding Col1}"/>
+                    <GridViewColumn Header="เลขที่รับสั่ง" Width="95" DisplayMemberBinding="{Binding Col2}"/>
+                    <GridViewColumn Header="วันที่บันทึก" Width="150" DisplayMemberBinding="{Binding Col3}"/>
+                    <GridViewColumn Header="วันที่ส่ง" Width="150" DisplayMemberBinding="{Binding Col4}"/>
+                    <GridViewColumn Header="ชื่อลูกค้า" Width="300" DisplayMemberBinding="{Binding Col5}"/>
+                    <GridViewColumn Header="ชื่อผลิตภัณฑ์" Width="250" DisplayMemberBinding="{Binding Col6}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="searchBtn" Content="เลือกใบคำสั่ง" HorizontalAlignment="Left" Margin="473,378,0,0" VerticalAlignment="Top" Width="103" FontSize="16" Click="searchBtn_Click"  />
+    </Grid>
+</Window>

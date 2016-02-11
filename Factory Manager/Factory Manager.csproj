@@ -125,6 +125,9 @@
     <Compile Include="CommandEdit.xaml.cs">
       <DependentUpon>CommandEdit.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CommandList.xaml.cs">
+      <DependentUpon>CommandList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CreateMember.xaml.cs">
       <DependentUpon>CreateMember.xaml</DependentUpon>
     </Compile>
@@ -145,6 +148,9 @@
     </Compile>
     <Compile Include="RecipeEdit.xaml.cs">
       <DependentUpon>RecipeEdit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecipeList.xaml.cs">
+      <DependentUpon>RecipeList.xaml</DependentUpon>
     </Compile>
     <Compile Include="ReportPreview.xaml.cs">
       <DependentUpon>ReportPreview.xaml</DependentUpon>
@@ -209,6 +215,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="CommandList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CreateMember.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -264,6 +274,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RecipeEdit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RecipeList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
