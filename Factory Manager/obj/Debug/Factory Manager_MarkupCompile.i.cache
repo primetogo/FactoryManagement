@@ -1,0 +1,20 @@
+﻿Factory Manager
+
+
+winexe
+C#
+.cs
+C:\Users\panupong\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\
+Factory_Manager
+none
+false
+DEBUG;TRACE
+C:\Users\panupong\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\App.xaml
+21-968603867
+
+341077526346
+271552784656
+cardList.xaml;checkConnect.xaml;CommandCreate.xaml;CommandEdit.xaml;CommandList.xaml;CreateMember.xaml;customerCreate.xaml;EditMember.xaml;Login.xaml;Mainprogram.xaml;materialCreate.xaml;ProductCreate.xaml;ProductEdit.xaml;ProgressBarWindow.xaml;RecipeCreate.xaml;RecipeEdit.xaml;RecipeList.xaml;ReportPreview.xaml;ReportPrint.xaml;TotalData.xaml;TotalDataPreview.xaml;
+
+False
+
