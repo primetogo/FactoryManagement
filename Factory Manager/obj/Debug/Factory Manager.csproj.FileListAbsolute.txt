@@ -1,0 +1,140 @@
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\Factory Manager.exe.config
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.csproj.Factory Manager.exe.config
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\cardList.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\checkConnect.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandCreate.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandEdit.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CreateMember.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\customerCreate.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\EditMember.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Login.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Mainprogram.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\materialCreate.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProductCreate.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProductEdit.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProgressBarWindow.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\RecipeCreate.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\RecipeEdit.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ReportPreview.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ReportPrint.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\TotalData.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\TotalDataPreview.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\cardList.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\checkConnect.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandCreate.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandEdit.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CreateMember.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\customerCreate.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\EditMember.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Login.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Mainprogram.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\materialCreate.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProductCreate.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProductEdit.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProgressBarWindow.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\RecipeCreate.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\RecipeEdit.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ReportPreview.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ReportPrint.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\TotalData.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\TotalDataPreview.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\App.g.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager_MarkupCompile.cache
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.g.resources
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory_Manager.Properties.Resources.resources
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.csproj.GenerateResource.Cache
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\blowing.rpt
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\cutting.rpt
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\material.rpt
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\printing.rpt
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\reportJob.rpt
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\blowing.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\cutting.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\material.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\printing.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\reportJob.cs
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\Factory Manager.exe.manifest
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\Factory Manager.application
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\Factory Manager.exe
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\Factory Manager.pdb
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\MySql.Data.Entity.EF5.dll
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\MySql.Data.Entity.EF6.dll
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\MySql.Fabric.Plugin.dll
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.exe.manifest
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.application
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.exe
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.pdb
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.csprojResolveAssemblyReference.cache
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandList.baml
+C:\Users\ภาณุพงศ์\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandList.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\Factory Manager.exe.config
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\blowing.rpt
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\cutting.rpt
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\material.rpt
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\printing.rpt
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\reportJob.rpt
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\blowing.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\cutting.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\material.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\printing.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\report\reportJob.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\Factory Manager.exe.manifest
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\Factory Manager.application
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\Factory Manager.exe
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\Factory Manager.pdb
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\MySql.Data.Entity.EF5.dll
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\MySql.Data.Entity.EF6.dll
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\bin\Debug\MySql.Fabric.Plugin.dll
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.csproj.Factory Manager.exe.config
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\cardList.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\checkConnect.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandCreate.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandEdit.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandList.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CreateMember.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\customerCreate.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\EditMember.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Login.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Mainprogram.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\materialCreate.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProductCreate.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProductEdit.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProgressBarWindow.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\RecipeCreate.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\RecipeEdit.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\RecipeList.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ReportPreview.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ReportPrint.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\TotalData.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\TotalDataPreview.baml
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\cardList.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\checkConnect.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandCreate.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandEdit.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CommandList.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\CreateMember.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\customerCreate.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\EditMember.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Login.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Mainprogram.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\materialCreate.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProductCreate.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProductEdit.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ProgressBarWindow.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\RecipeCreate.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\RecipeEdit.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\RecipeList.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ReportPreview.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\ReportPrint.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\TotalData.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\TotalDataPreview.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\App.g.cs
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager_MarkupCompile.cache
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.g.resources
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory_Manager.Properties.Resources.resources
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.csproj.GenerateResource.Cache
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.exe.manifest
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.application
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.exe
+C:\Users\panupong\Documents\Visual Studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.pdb
+C:\Users\panupong\documents\visual studio 2013\Projects\Factory Manager\Factory Manager\obj\Debug\Factory Manager.csprojResolveAssemblyReference.cache
